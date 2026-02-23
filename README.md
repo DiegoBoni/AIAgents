@@ -12,6 +12,31 @@ Provides structured commands and domain-scoped skills for Claude, Codex, and Gem
 
 ---
 
+## Install
+
+Run this from inside **any project** you want to set up:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh)
+```
+
+With options:
+
+```bash
+# Only Claude
+bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh) --agent claude
+
+# Specific target folder
+bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh) --target /path/to/project
+
+# All agents, symlink mode (updates automatically when this repo changes)
+bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh) --agent all --mode link
+```
+
+After install, open the project in your agent and run `/context` to get started.
+
+---
+
 ## The problem this solves
 
 Most AI agent setups load the entire project context on every call. As a project grows, this becomes expensive and noisy. This kit solves that with **domain skills**: each skill loads only the section of the project context it needs.
@@ -104,64 +129,86 @@ Per implementation task:
 
 ## Supported agents
 
+After bootstrap, each agent reads from the **project root** — not inside `.AIAgents/`:
+
 | Agent | Commands path | Skills path |
 |---|---|---|
-| Claude | `.AIAgents/.claude/commands/` | `.AIAgents/.claude/skills/` |
-| Codex | `.AIAgents/.codex/commands/` | `.AIAgents/.codex/skills/` |
-| Gemini | `.AIAgents/.gemini/commands/` | `.AIAgents/.gemini/skills/` |
+| Claude | `.claude/commands/` | `.claude/skills/` |
+| Codex | `.codex/commands/` | `.codex/skills/` |
+| Gemini | `.gemini/commands/` | `.gemini/skills/` |
 
-Source templates live in `Claude/`, `Codex/`, `Gemini/` and are copied by bootstrap.
+The shared context file lives at `.ai/project-context.md`.
+Source templates live in `.AIAgents/Claude/`, `Codex/`, `Gemini/` and are only used by this repo.
 
 ---
 
 ## Getting started
 
-### Bootstrap into a new project
+### Option 1 — Install via curl (recommended)
+
+From inside any project:
 
 ```bash
-# From this repo
-./.AIAgents/scripts/bootstrap-commands.sh --repo /path/to/your/project --agent all --mode copy
+bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh)
 ```
 
-This will:
-- Copy commands into `.AIAgents/.<agent>/commands/`
-- Copy domain skills into `.AIAgents/.<agent>/skills/`
-- Create `.AIAgents/project-context.md` from template
-- Inject startup instructions into `CLAUDE.md`, `AGENTS.md`, and `GEMINI.md`
-
-Options:
-
-```
---repo PATH     Target project path (default: current directory)
---agent AGENT   claude | codex | gemini | all (default: all)
---mode MODE     copy | link (default: copy)
-```
-
-### Bootstrap into the current directory
+### Option 2 — Bootstrap manually (if you cloned this repo)
 
 ```bash
+# From the AIAgents repo root, targeting another project
+./.AIAgents/scripts/bootstrap-commands.sh --repo /path/to/your/project
+
+# Or install into the current directory
 ./.AIAgents/scripts/bootstrap-commands.sh
+```
+
+### Options (both methods)
+
+```
+--agent AGENT   claude | codex | gemini | all  (default: all)
+--mode  MODE    copy | link                    (default: copy)
+--target PATH   target project path            (install.sh only)
+--repo  PATH    target project path            (bootstrap-commands.sh only)
+```
+
+`copy` — files are copied, standalone.
+`link` — files are symlinked; updating this repo updates all linked projects automatically.
+
+### What gets installed
+
+```
+<your-project>/
+├── .claude/commands/    ← /context  /spec  /plan  /tasks
+├── .claude/skills/      ← backend  frontend  data  testing  devops
+├── .codex/  ...
+├── .gemini/ ...
+├── .ai/project-context.md
+├── CLAUDE.md
+├── AGENTS.md
+└── GEMINI.md
 ```
 
 ### First session in any project
 
 ```
-1. /context              # Scan repo and populate project-context.md
-2. /spec <feature>       # Define what you're building
-3. /plan specs/<f>/spec.md
-4. /tasks specs/<f>/plan.md
+1. /context              → scans repo, populates .ai/project-context.md
+2. /spec <feature>       → creates specs/<feature>/spec.md
+3. /plan                 → creates specs/<feature>/plan.md
+4. /tasks                → creates specs/<feature>/tasks.md
+   then: load the domain skill for your task (backend / frontend / data / testing / devops)
 ```
 
 ---
 
 ## Repository structure
 
+### This repo (source)
+
 ```
 .AIAgents/
 ├── README.md
 ├── COMMANDS.md                    # Command reference
 ├── ROUTING.md                     # Agent-to-folder mapping
-├── project-context.md             # Generated per project (gitignored or committed)
 │
 ├── _shared/
 │   └── templates/
@@ -212,12 +259,28 @@ Options:
 │       ├── devops/SKILL.md
 │       └── requirements-breakdown/SKILL.md
 │
-├── .claude/commands/              # Native Claude commands (installed by bootstrap)
-├── .codex/commands/               # Native Codex commands (installed by bootstrap)
-├── .gemini/commands/              # Native Gemini commands (installed by bootstrap)
-│
 └── scripts/
     └── bootstrap-commands.sh      # Install script
+```
+
+### Target project (after bootstrap)
+
+```
+<your-project>/
+├── .claude/
+│   ├── commands/                  # context.md, spec.md, plan.md, tasks.md
+│   └── skills/                    # backend, frontend, data, testing, devops
+├── .codex/
+│   ├── commands/
+│   └── skills/
+├── .gemini/
+│   ├── commands/
+│   └── skills/
+├── .ai/
+│   └── project-context.md         # populated by /context
+├── CLAUDE.md                      # Claude startup instructions
+├── AGENTS.md                      # Codex startup instructions
+└── GEMINI.md                      # Gemini startup instructions
 ```
 
 ---

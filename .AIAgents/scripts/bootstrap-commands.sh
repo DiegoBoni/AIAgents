@@ -127,10 +127,10 @@ install_skills() {
 }
 
 ensure_project_context() {
-  local target_context="$REPO_PATH/.AIAgents/project-context.md"
+  local target_context="$REPO_PATH/.ai/project-context.md"
   local template_context="$MODULE_ROOT/_shared/templates/project-context-template.md"
 
-  mkdir -p "$REPO_PATH/.AIAgents"
+  mkdir -p "$REPO_PATH/.ai"
 
   if [[ ! -f "$target_context" ]]; then
     if [[ -f "$template_context" ]]; then
@@ -140,7 +140,7 @@ ensure_project_context() {
       cat > "$target_context" <<'DOC'
 # Project Context
 
-TODO: Run `cmd.context` to populate this file.
+TODO: Run `/context` to populate this file.
 DOC
       echo "Created fallback: $target_context"
     fi
@@ -223,7 +223,7 @@ Domain skills available (load only the skill for your current task):
 $(for skill in backend frontend data testing devops; do echo "- $skills_path/$skill/SKILL.md"; done)
 
 Startup behavior (required):
-1. Run \`/context\` first to create/update \`.AIAgents/project-context.md\`.
+1. Run \`/context\` first to create/update \`.ai/project-context.md\`.
 2. If \`project-context.md\` already exists, refresh it when stack, architecture, integrations, or standards change.
 3. Before any task, load only the skill matching your domain (backend, frontend, data, testing, devops).
 4. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
@@ -245,21 +245,21 @@ DOC
 }
 
 install_codex() {
-  install_files "$MODULE_ROOT/Codex/commands" "$REPO_PATH/.AIAgents/.codex/commands"
-  install_skills "$MODULE_ROOT/Codex/skills" "$REPO_PATH/.AIAgents/.codex/skills"
-  install_guidance "$REPO_PATH/AGENTS.md" "AGENTS Instructions" ".AIAgents/.codex/commands/*.md" ".AIAgents/.codex/skills"
+  install_files "$MODULE_ROOT/Codex/commands" "$REPO_PATH/.codex/commands"
+  install_skills "$MODULE_ROOT/Codex/skills" "$REPO_PATH/.codex/skills"
+  install_guidance "$REPO_PATH/AGENTS.md" "AGENTS Instructions" ".codex/commands/*.md" ".codex/skills"
 }
 
 install_gemini() {
-  install_files "$MODULE_ROOT/Gemini/commands" "$REPO_PATH/.AIAgents/.gemini/commands"
-  install_skills "$MODULE_ROOT/Gemini/skills" "$REPO_PATH/.AIAgents/.gemini/skills"
-  install_guidance "$REPO_PATH/GEMINI.md" "Gemini Instructions" ".AIAgents/.gemini/commands/*.md" ".AIAgents/.gemini/skills"
+  install_files "$MODULE_ROOT/Gemini/commands" "$REPO_PATH/.gemini/commands"
+  install_skills "$MODULE_ROOT/Gemini/skills" "$REPO_PATH/.gemini/skills"
+  install_guidance "$REPO_PATH/GEMINI.md" "Gemini Instructions" ".gemini/commands/*.md" ".gemini/skills"
 }
 
 install_claude() {
-  install_files "$MODULE_ROOT/Claude/commands" "$REPO_PATH/.AIAgents/.claude/commands"
-  install_skills "$MODULE_ROOT/Claude/skills" "$REPO_PATH/.AIAgents/.claude/skills"
-  install_guidance "$REPO_PATH/CLAUDE.md" "Claude Instructions" ".AIAgents/.claude/commands/*.md" ".AIAgents/.claude/skills"
+  install_files "$MODULE_ROOT/Claude/commands" "$REPO_PATH/.claude/commands"
+  install_skills "$MODULE_ROOT/Claude/skills" "$REPO_PATH/.claude/skills"
+  install_guidance "$REPO_PATH/CLAUDE.md" "Claude Instructions" ".claude/commands/*.md" ".claude/skills"
 }
 
 if [[ "$AGENT" == "codex" || "$AGENT" == "all" ]]; then
@@ -276,4 +276,5 @@ fi
 
 ensure_project_context
 
-echo "Done. Agent commands and skills installed in: $REPO_PATH/.AIAgents"
+echo "Done. Installed in $REPO_PATH:"
+echo "  .claude/   .codex/   .gemini/   .ai/project-context.md"

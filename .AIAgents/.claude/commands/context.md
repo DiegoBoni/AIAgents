@@ -1,7 +1,7 @@
 ---
 description: Scan the repository and generate the full project context plus domain-specific context sections.
 arguments: Optional domain focus (backend, frontend, data, testing, devops). Omit to generate all.
-output: .AIAgents/project-context.md — with populated [context.<domain>] sections
+output: .ai/project-context.md — with populated [context.<domain>] sections
 ---
 
 ## User Input
@@ -29,8 +29,8 @@ without needing the rest of the file.
 4. Populate each `[context.<domain>]` section with only the fields relevant to that domain.
    - If a domain has no evidence in the repo, write `N/A — not detected` for each field.
    - Mark uncertain fields as `NEEDS CLARIFICATION`.
-5. Write the result to `.AIAgents/project-context.md`.
-6. Update `CLAUDE.md` with any project-specific constraints discovered.
+5. Write the result to `.ai/project-context.md`.
+6. Update `CLAUDE.md` with any project-specific constraints discovered (path reference: `.claude/commands/*.md`).
 7. Return:
    - Confidence level per domain (high / medium / low)
    - List of assumptions made
