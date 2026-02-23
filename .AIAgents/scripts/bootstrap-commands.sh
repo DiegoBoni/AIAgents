@@ -223,17 +223,17 @@ Domain skills available (load only the skill for your current task):
 $(for skill in backend frontend data testing devops; do echo "- $skills_path/$skill/SKILL.md"; done)
 
 Startup behavior (required):
-1. Run \`cmd.context\` first to create/update \`.AIAgents/project-context.md\`.
+1. Run \`/context\` first to create/update \`.AIAgents/project-context.md\`.
 2. If \`project-context.md\` already exists, refresh it when stack, architecture, integrations, or standards change.
 3. Before any task, load only the skill matching your domain (backend, frontend, data, testing, devops).
 4. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
 5. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
 
 Recommended execution order:
-1. \`cmd.context\`
-2. \`cmd.specify\`
-3. \`cmd.plan\`
-4. \`cmd.tasks\`
+1. \`/context\`
+2. \`/spec\`
+3. \`/plan\`
+4. \`/tasks\`
 
 Bootstrap command:
 \`./.AIAgents/scripts/bootstrap-commands.sh --repo $REPO_PATH --agent all --mode copy\`

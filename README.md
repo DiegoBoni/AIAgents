@@ -34,7 +34,7 @@ Every task loads:        Backend task loads:
 
 ### 1. One context file, five domain sections
 
-After running `cmd.context`, the file `.AIAgents/project-context.md` contains both a global summary and five independently loadable domain sections:
+After running `/context`, the file `.AIAgents/project-context.md` contains both a global summary and five independently loadable domain sections:
 
 ```
 project-context.md
@@ -46,28 +46,29 @@ project-context.md
 └── [context.devops]     ← loaded by devops skill only
 ```
 
-### 2. Domain skills
+### 2. Domain skills — available for all 3 agents
 
-Each skill tells the agent exactly what to load and what to ignore:
+Each skill tells the agent exactly what to load and what to ignore.
+Skills are tuned per agent: Claude for broad implementation, Codex for focused code generation, Gemini for analysis and design.
 
-| Skill | Domain | Reads |
-|---|---|---|
-| `backend` | API, services, auth | `[context.backend]` |
-| `frontend` | UI, components, state | `[context.frontend]` |
-| `data` | DB, migrations, models | `[context.data]` |
-| `testing` | Tests, coverage, CI | `[context.testing]` |
-| `devops` | CI/CD, infra, secrets | `[context.devops]` |
+| Skill | Domain | Claude | Codex | Gemini |
+|---|---|---|---|---|
+| `backend` | API, services, auth | implement | implement | analyze / review |
+| `frontend` | UI, components, state | implement | implement | analyze / review |
+| `data` | DB, migrations, models | implement | implement | analyze / review |
+| `testing` | Tests, coverage, CI | implement | implement | strategy / gaps |
+| `devops` | CI/CD, infra, secrets | implement | implement | analyze / review |
 
 ### 3. Commands (workflow)
 
 Commands handle the planning pipeline. They run once per feature and produce persistent artifacts:
 
-| Command | Input | Output |
-|---|---|---|
-| `cmd.context` | Repo scan | `project-context.md` |
-| `cmd.specify` | Feature description | `specs/<feature>/spec.md` |
-| `cmd.plan` | `spec.md` | `specs/<feature>/plan.md` |
-| `cmd.tasks` | `plan.md` | `specs/<feature>/tasks.md` |
+| Command | Invoke as | Input | Output |
+|---|---|---|---|
+| `context.md` | `/context` | Repo scan | `project-context.md` |
+| `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` |
+| `plan.md` | `/plan` | `spec.md` | `specs/<feature>/plan.md` |
+| `tasks.md` | `/tasks` | `plan.md` | `specs/<feature>/tasks.md` |
 
 ---
 
@@ -75,19 +76,29 @@ Commands handle the planning pipeline. They run once per feature and produce per
 
 ```
 New project setup:
-  1. bootstrap  →  install commands + skills into target repo
-  2. cmd.context  →  populate project-context.md
+  1. bootstrap   →  install commands + skills into target repo
+  2. /context    →  scan repo and populate project-context.md
 
 Per feature:
-  3. cmd.specify <feature description>  →  spec.md
-  4. cmd.plan specs/<feature>/spec.md   →  plan.md
-  5. cmd.tasks specs/<feature>/plan.md  →  tasks.md
+  3. /spec <feature description>      →  spec.md
+  4. /plan specs/<feature>/spec.md    →  plan.md
+  5. /tasks specs/<feature>/plan.md   →  tasks.md
 
 Per implementation task:
   6. Load the matching domain skill (backend / frontend / data / testing / devops)
   7. Agent reads only [context.<domain>] — not the full file
   8. Implement, verify, ship
 ```
+
+---
+
+## Agent roles
+
+| Agent | Strength | Use for |
+|---|---|---|
+| **Claude** | Broad reasoning + implementation | Features, refactors, complex multi-file changes |
+| **Codex** | Focused code generation | Targeted implementation, tests, migrations |
+| **Gemini** | Analysis + requirements | Design reviews, risk analysis, spec clarification |
 
 ---
 
@@ -135,10 +146,10 @@ Options:
 ### First session in any project
 
 ```
-1. cmd.context              # Scan repo and populate project-context.md
-2. cmd.specify <feature>    # Define what you're building
-3. cmd.plan specs/<f>/spec.md
-4. cmd.tasks specs/<f>/plan.md
+1. /context              # Scan repo and populate project-context.md
+2. /spec <feature>       # Define what you're building
+3. /plan specs/<f>/spec.md
+4. /tasks specs/<f>/plan.md
 ```
 
 ---
@@ -161,26 +172,44 @@ Options:
 │
 ├── Claude/                        # Source files for Claude
 │   ├── commands/
-│   │   ├── cmd.context.md
-│   │   ├── cmd.specify.md
-│   │   ├── cmd.plan.md
-│   │   └── cmd.tasks.md
+│   │   ├── context.md
+│   │   ├── spec.md
+│   │   ├── plan.md
+│   │   └── tasks.md
 │   └── skills/
-│       ├── backend/SKILL.md       # Backend domain skill
-│       ├── frontend/SKILL.md      # Frontend domain skill
-│       ├── data/SKILL.md          # Data domain skill
-│       ├── testing/SKILL.md       # Testing domain skill
-│       ├── devops/SKILL.md        # DevOps domain skill
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       ├── devops/SKILL.md
 │       └── architecture-review/SKILL.md
 │
 ├── Codex/                         # Source files for Codex
 │   ├── commands/
+│   │   ├── context.md
+│   │   ├── spec.md
+│   │   ├── plan.md
+│   │   └── tasks.md
 │   └── skills/
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       ├── devops/SKILL.md
 │       └── coding-standard/SKILL.md
 │
 ├── Gemini/                        # Source files for Gemini
 │   ├── commands/
+│   │   ├── context.md
+│   │   ├── spec.md
+│   │   ├── plan.md
+│   │   └── tasks.md
 │   └── skills/
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       ├── devops/SKILL.md
 │       └── requirements-breakdown/SKILL.md
 │
 ├── .claude/commands/              # Native Claude commands (installed by bootstrap)
@@ -197,28 +226,29 @@ Options:
 
 ### Add a new skill
 
-1. Create a folder: `Claude/skills/<skill-name>/`
+1. Create a folder in each agent source dir: `Claude/skills/<name>/`, `Codex/skills/<name>/`, `Gemini/skills/<name>/`
 2. Add `SKILL.md` using the template at `_shared/templates/skill-template.md`
 3. Define which section of `project-context.md` the skill reads
-4. Re-run bootstrap to deploy it to target projects
+4. Re-run bootstrap to deploy to target projects
 
 ### Add a new domain section to project-context
 
 1. Add `## [context.<domain>]` to `_shared/templates/project-context-template.md`
-2. Update `cmd.context.md` to extract evidence for the new domain
-3. Create a matching skill in `Claude/skills/<domain>/SKILL.md`
+2. Update `context.md` (in each agent's commands folder) to extract evidence for the new domain
+3. Create matching skills in each agent's skills folder
 
 ### Add a new command
 
-1. Create `Claude/commands/cmd.<name>.md` using `_shared/templates/command-template.md`
-2. Re-run bootstrap to deploy to target projects
+1. Create `Claude/commands/<name>.md` using `_shared/templates/command-template.md`
+2. Mirror in `Codex/commands/` and `Gemini/commands/` as needed
+3. Re-run bootstrap to deploy to target projects
 
 ---
 
 ## Design principles
 
 - **Minimal context per call** — skills load only what they need, not the full project
-- **Evidence-based context** — `cmd.context` extracts facts from the repo, not assumptions
+- **Evidence-based context** — `/context` extracts facts from the repo, not assumptions
 - **Portable** — the entire kit is plain Markdown, works with any agent that reads files
 - **Composable** — commands and skills are independent; use only what fits your workflow
 - **Transparent** — every assumption is marked, every open question is surfaced
