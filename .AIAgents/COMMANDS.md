@@ -16,12 +16,13 @@ This module provides reusable command specs by agent.
 
 ## Command set
 
-| Command | Invoke as | Input | Output |
-|---|---|---|---|
-| `context.md` | `/context` | Repo scan (optional domain focus) | `.AIAgents/project-context.md` |
-| `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` |
-| `plan.md` | `/plan` | `specs/<feature>/spec.md` | `specs/<feature>/plan.md` |
-| `tasks.md` | `/tasks` | `specs/<feature>/plan.md` | `specs/<feature>/tasks.md` |
+| Command | Invoke as | Input | Output | When |
+|---|---|---|---|---|
+| `context.md` | `/context` | Repo scan (optional domain focus) | `.ai/project-context.md` | Once per project / on stack change |
+| `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` | Once per feature |
+| `plan.md` | `/plan` | `specs/<feature>/spec.md` | `specs/<feature>/plan.md` | Once per feature |
+| `tasks.md` | `/tasks` | `specs/<feature>/plan.md` | `specs/<feature>/tasks.md` | Once per feature |
+| `fix.md` | `/fix` | Bug description + file path(s) | Fixed code + root cause | Per bug, skips spec/plan/tasks |
 
 ## Domain skills
 

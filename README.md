@@ -86,14 +86,15 @@ Skills are tuned per agent: Claude for broad implementation, Codex for focused c
 
 ### 3. Commands (workflow)
 
-Commands handle the planning pipeline. They run once per feature and produce persistent artifacts:
-
-| Command | Invoke as | Input | Output |
+| Command | Invoke as | When to use | Output |
 |---|---|---|---|
-| `context.md` | `/context` | Repo scan | `project-context.md` |
-| `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` |
-| `plan.md` | `/plan` | `spec.md` | `specs/<feature>/plan.md` |
-| `tasks.md` | `/tasks` | `plan.md` | `specs/<feature>/tasks.md` |
+| `context.md` | `/context` | Once per project, on stack change | `.ai/project-context.md` |
+| `spec.md` | `/spec` | Once per feature | `specs/<feature>/spec.md` |
+| `plan.md` | `/plan` | Once per feature | `specs/<feature>/plan.md` |
+| `tasks.md` | `/tasks` | Once per feature | `specs/<feature>/tasks.md` |
+| `fix.md` | `/fix` | Per bug — skips spec/plan/tasks | Fixed code + root cause |
+
+`/fix` auto-detects the domain from the file path, loads only that context section, and applies the minimal fix.
 
 ---
 
@@ -102,17 +103,16 @@ Commands handle the planning pipeline. They run once per feature and produce per
 ```
 New project setup:
   1. bootstrap   →  install commands + skills into target repo
-  2. /context    →  scan repo and populate project-context.md
+  2. /context    →  scan repo, populate .ai/project-context.md
 
-Per feature:
-  3. /spec <feature description>      →  spec.md
-  4. /plan specs/<feature>/spec.md    →  plan.md
-  5. /tasks specs/<feature>/plan.md   →  tasks.md
+New feature:
+  3. /spec <description>   →  spec.md
+  4. /plan                 →  plan.md
+  5. /tasks                →  tasks.md
+  6. skill per task        →  loads only [context.<domain>]
 
-Per implementation task:
-  6. Load the matching domain skill (backend / frontend / data / testing / devops)
-  7. Agent reads only [context.<domain>] — not the full file
-  8. Implement, verify, ship
+Bug fix:
+  /fix <description> <file>   →  detects domain, minimal fix, root cause
 ```
 
 ---
