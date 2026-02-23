@@ -98,6 +98,34 @@ install_files() {
   done
 }
 
+install_skills() {
+  local src_skills_dir="$1"
+  local dest_skills_dir="$2"
+
+  [[ -d "$src_skills_dir" ]] || return 0
+
+  local skill_dir
+  for skill_dir in "$src_skills_dir"/*/; do
+    [[ -d "$skill_dir" ]] || continue
+    local skill_name
+    skill_name="$(basename "$skill_dir")"
+    local dest="$dest_skills_dir/$skill_name"
+    local skill_file="$skill_dir/SKILL.md"
+
+    [[ -f "$skill_file" ]] || continue
+
+    mkdir -p "$dest"
+
+    if [[ "$MODE" == "copy" ]]; then
+      cp "$skill_file" "$dest/SKILL.md"
+    else
+      ln -sfn "$skill_file" "$dest/SKILL.md"
+    fi
+
+    echo "Installed skill: $dest/SKILL.md"
+  done
+}
+
 ensure_project_context() {
   local target_context="$REPO_PATH/.AIAgents/project-context.md"
   local template_context="$MODULE_ROOT/_shared/templates/project-context-template.md"
@@ -180,6 +208,7 @@ install_guidance() {
   local file="$1"
   local title="$2"
   local command_path="$3"
+  local skills_path="$4"
 
   ensure_header "$file" "$title"
 
@@ -188,16 +217,17 @@ install_guidance() {
 
   cat > "$block_file" <<DOC
 $START_MARK
-Load command files from \
-\
-\
-$command_path
+Load command files from $command_path
+
+Domain skills available (load only the skill for your current task):
+$(for skill in backend frontend data testing devops; do echo "- $skills_path/$skill/SKILL.md"; done)
 
 Startup behavior (required):
 1. Run \`cmd.context\` first to create/update \`.AIAgents/project-context.md\`.
 2. If \`project-context.md\` already exists, refresh it when stack, architecture, integrations, or standards change.
-3. Use \`project-context.md\` as source of truth before planning or coding.
-4. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
+3. Before any task, load only the skill matching your domain (backend, frontend, data, testing, devops).
+4. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
+5. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
 
 Recommended execution order:
 1. \`cmd.context\`
@@ -216,17 +246,20 @@ DOC
 
 install_codex() {
   install_files "$MODULE_ROOT/Codex/commands" "$REPO_PATH/.AIAgents/.codex/commands"
-  install_guidance "$REPO_PATH/AGENTS.md" "AGENTS Instructions" ".AIAgents/.codex/commands/*.md"
+  install_skills "$MODULE_ROOT/Codex/skills" "$REPO_PATH/.AIAgents/.codex/skills"
+  install_guidance "$REPO_PATH/AGENTS.md" "AGENTS Instructions" ".AIAgents/.codex/commands/*.md" ".AIAgents/.codex/skills"
 }
 
 install_gemini() {
   install_files "$MODULE_ROOT/Gemini/commands" "$REPO_PATH/.AIAgents/.gemini/commands"
-  install_guidance "$REPO_PATH/GEMINI.md" "Gemini Instructions" ".AIAgents/.gemini/commands/*.md"
+  install_skills "$MODULE_ROOT/Gemini/skills" "$REPO_PATH/.AIAgents/.gemini/skills"
+  install_guidance "$REPO_PATH/GEMINI.md" "Gemini Instructions" ".AIAgents/.gemini/commands/*.md" ".AIAgents/.gemini/skills"
 }
 
 install_claude() {
   install_files "$MODULE_ROOT/Claude/commands" "$REPO_PATH/.AIAgents/.claude/commands"
-  install_guidance "$REPO_PATH/CLAUDE.md" "Claude Instructions" ".AIAgents/.claude/commands/*.md"
+  install_skills "$MODULE_ROOT/Claude/skills" "$REPO_PATH/.AIAgents/.claude/skills"
+  install_guidance "$REPO_PATH/CLAUDE.md" "Claude Instructions" ".AIAgents/.claude/commands/*.md" ".AIAgents/.claude/skills"
 }
 
 if [[ "$AGENT" == "codex" || "$AGENT" == "all" ]]; then
@@ -243,4 +276,4 @@ fi
 
 ensure_project_context
 
-echo "Done. Agent commands installed in: $REPO_PATH/.AIAgents"
+echo "Done. Agent commands and skills installed in: $REPO_PATH/.AIAgents"
