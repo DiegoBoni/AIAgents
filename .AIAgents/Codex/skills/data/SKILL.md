@@ -23,7 +23,7 @@ Focused on safe, reversible changes with clear rollback paths.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.data]` section from `.AIAgents/project-context.md`
+1. `[context.data]` section from `.ai/project-context.md`
 2. The specific migration, model, or query file(s) to modify
 
 Do NOT load frontend components, backend service logic, or devops sections.
@@ -35,7 +35,7 @@ Do NOT load frontend components, backend service logic, or devops sections.
 
 ## Workflow
 
-1. Read `[context.data]` from `.AIAgents/project-context.md`.
+1. Read `[context.data]` from `.ai/project-context.md`.
 2. Read the target file(s).
 3. Implement the change following migration conventions and naming standards.
 4. Check for data integrity: constraints, indexes, nullability, defaults.

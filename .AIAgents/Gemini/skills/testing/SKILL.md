@@ -23,7 +23,7 @@ Focused on reasoning about what needs to be tested and how, before writing test 
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.testing]` section from `.AIAgents/project-context.md`
+1. `[context.testing]` section from `.ai/project-context.md`
 2. The source file(s) and existing test file(s) relevant to the analysis
 
 Do NOT load unrelated services, frontend components, or devops config.
@@ -35,7 +35,7 @@ Do NOT load unrelated services, frontend components, or devops config.
 
 ## Workflow
 
-1. Read `[context.testing]` from `.AIAgents/project-context.md`.
+1. Read `[context.testing]` from `.ai/project-context.md`.
 2. Read source and existing test files.
 3. Map user flows and edge cases to test scenarios.
 4. Identify: missing coverage, test isolation issues, flakiness risks.

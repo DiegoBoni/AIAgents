@@ -24,7 +24,7 @@ Loads only the `[context.data]` section to minimize token usage.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.data]` section from `.AIAgents/project-context.md`
+1. `[context.data]` section from `.ai/project-context.md`
 2. The specific migration file(s), model(s), or query file(s) involved
 
 Do NOT load frontend components, backend service logic, or devops sections unless explicitly required.
@@ -36,7 +36,7 @@ Do NOT load frontend components, backend service logic, or devops sections unles
 
 ## Workflow
 
-1. Read `[context.data]` from `.AIAgents/project-context.md`.
+1. Read `[context.data]` from `.ai/project-context.md`.
 2. Identify the schema, model, or query to change.
 3. Read only the relevant source files.
 4. Implement changes following the migration strategy and naming conventions.

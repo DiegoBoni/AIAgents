@@ -23,7 +23,7 @@ Loads only the `[context.testing]` section plus the files under test to minimize
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.testing]` section from `.AIAgents/project-context.md`
+1. `[context.testing]` section from `.ai/project-context.md`
 2. The specific source file(s) being tested
 3. Existing test file(s) for that unit if they exist
 
@@ -36,7 +36,7 @@ Do NOT load unrelated backend services, frontend components, or devops config un
 
 ## Workflow
 
-1. Read `[context.testing]` from `.AIAgents/project-context.md`.
+1. Read `[context.testing]` from `.ai/project-context.md`.
 2. Read the source file(s) to understand inputs, outputs, and edge cases.
 3. Read existing test file(s) to avoid duplication.
 4. Write focused, deterministic tests covering happy path and key edge cases.

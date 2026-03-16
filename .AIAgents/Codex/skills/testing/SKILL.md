@@ -23,7 +23,7 @@ Focused on deterministic, isolated test cases with clear coverage intent.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.testing]` section from `.AIAgents/project-context.md`
+1. `[context.testing]` section from `.ai/project-context.md`
 2. The source file(s) under test
 3. Existing test file(s) for those units
 
@@ -36,7 +36,7 @@ Do NOT load unrelated backend services, frontend components, or devops config.
 
 ## Workflow
 
-1. Read `[context.testing]` from `.AIAgents/project-context.md`.
+1. Read `[context.testing]` from `.ai/project-context.md`.
 2. Read source and existing test files.
 3. Write focused tests: happy path + key edge cases.
 4. Ensure isolation: no shared mutable state, no real network/DB calls in unit tests.

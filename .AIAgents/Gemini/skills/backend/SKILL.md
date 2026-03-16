@@ -23,7 +23,7 @@ Focused on reasoning about correctness, tradeoffs, and risks before implementati
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.backend]` section from `.AIAgents/project-context.md`
+1. `[context.backend]` section from `.ai/project-context.md`
 2. The specific file(s) or spec relevant to the analysis
 
 Do NOT load frontend, data migration, or devops sections unless explicitly required.
@@ -35,7 +35,7 @@ Do NOT load frontend, data migration, or devops sections unless explicitly requi
 
 ## Workflow
 
-1. Read `[context.backend]` from `.AIAgents/project-context.md`.
+1. Read `[context.backend]` from `.ai/project-context.md`.
 2. Read the relevant source or spec file(s).
 3. Analyze the request: identify assumptions, constraints, and risks.
 4. Produce structured analysis: options, tradeoffs, recommendation.

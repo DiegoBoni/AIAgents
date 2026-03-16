@@ -23,7 +23,7 @@ Focused on reasoning about reliability, security, and blast radius before implem
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.devops]` section from `.AIAgents/project-context.md`
+1. `[context.devops]` section from `.ai/project-context.md`
 2. The specific pipeline or infra file(s) relevant to the analysis
 
 Do NOT load application source code, frontend components, or migrations.
@@ -35,7 +35,7 @@ Do NOT load application source code, frontend components, or migrations.
 
 ## Workflow
 
-1. Read `[context.devops]` from `.AIAgents/project-context.md`.
+1. Read `[context.devops]` from `.ai/project-context.md`.
 2. Read the relevant config or pipeline file(s).
 3. Analyze: reliability impact, security posture, environment scope, rollback viability.
 4. Produce structured analysis: options, tradeoffs, recommendation.

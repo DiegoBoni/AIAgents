@@ -23,7 +23,7 @@ Loads only the `[context.backend]` section — not the full project context — 
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.backend]` section from `.AIAgents/project-context.md`
+1. `[context.backend]` section from `.ai/project-context.md`
 2. The specific file(s) involved in the task
 
 Do NOT load frontend, data migration, or devops sections unless explicitly required.
@@ -35,7 +35,7 @@ Do NOT load frontend, data migration, or devops sections unless explicitly requi
 
 ## Workflow
 
-1. Read `[context.backend]` from `.AIAgents/project-context.md`.
+1. Read `[context.backend]` from `.ai/project-context.md`.
 2. Identify the specific module, service, or endpoint to change.
 3. Read only the relevant source files.
 4. Implement minimal, focused changes aligned with backend conventions.

@@ -23,7 +23,7 @@ Loads only the `[context.devops]` section to minimize token usage.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.devops]` section from `.AIAgents/project-context.md`
+1. `[context.devops]` section from `.ai/project-context.md`
 2. The specific pipeline, infra, or config file(s) involved
 
 Do NOT load application source code, frontend components, or database migrations unless explicitly required.
@@ -35,7 +35,7 @@ Do NOT load application source code, frontend components, or database migrations
 
 ## Workflow
 
-1. Read `[context.devops]` from `.AIAgents/project-context.md`.
+1. Read `[context.devops]` from `.ai/project-context.md`.
 2. Identify the pipeline step, deployment target, or config to change.
 3. Read only the relevant config or infra files.
 4. Implement minimal, targeted changes following the delivery conventions.

@@ -23,7 +23,7 @@ Focused on safe, scoped changes with clear environment impact.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.devops]` section from `.AIAgents/project-context.md`
+1. `[context.devops]` section from `.ai/project-context.md`
 2. The specific pipeline or config file(s) to modify
 
 Do NOT load application source code, frontend components, or database migrations.
@@ -35,7 +35,7 @@ Do NOT load application source code, frontend components, or database migrations
 
 ## Workflow
 
-1. Read `[context.devops]` from `.AIAgents/project-context.md`.
+1. Read `[context.devops]` from `.ai/project-context.md`.
 2. Read the target config file(s).
 3. Implement the change following the pipeline and environment conventions.
 4. Verify no secrets are hardcoded — use references to the secrets manager.

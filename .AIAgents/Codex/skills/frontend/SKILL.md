@@ -23,7 +23,7 @@ Focused on producing working UI code aligned with the design system.
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.frontend]` section from `.AIAgents/project-context.md`
+1. `[context.frontend]` section from `.ai/project-context.md`
 2. The specific component(s) or page(s) to modify
 
 Do NOT load backend service logic, migrations, or devops sections.
@@ -35,7 +35,7 @@ Do NOT load backend service logic, migrations, or devops sections.
 
 ## Workflow
 
-1. Read `[context.frontend]` from `.AIAgents/project-context.md`.
+1. Read `[context.frontend]` from `.ai/project-context.md`.
 2. Read the target file(s).
 3. Implement the change using the established component patterns and design system.
 4. Verify API calls match the backend contract — flag mismatches, do not fix backend here.

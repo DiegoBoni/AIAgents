@@ -23,7 +23,7 @@ Focused on reasoning about correctness, performance, and safety before implement
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.data]` section from `.AIAgents/project-context.md`
+1. `[context.data]` section from `.ai/project-context.md`
 2. The specific schema, model, or migration file(s) relevant to the analysis
 
 Do NOT load frontend, backend service logic, or devops sections.
@@ -35,7 +35,7 @@ Do NOT load frontend, backend service logic, or devops sections.
 
 ## Workflow
 
-1. Read `[context.data]` from `.AIAgents/project-context.md`.
+1. Read `[context.data]` from `.ai/project-context.md`.
 2. Read the relevant schema or migration file(s).
 3. Analyze: data integrity, index strategy, migration reversibility, performance impact.
 4. Produce structured analysis: options, tradeoffs, recommendation.

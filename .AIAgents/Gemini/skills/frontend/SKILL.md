@@ -23,7 +23,7 @@ Focused on reasoning about user experience, accessibility, and design system con
 ## Context loading (minimal)
 
 Before starting, read only:
-1. `[context.frontend]` section from `.AIAgents/project-context.md`
+1. `[context.frontend]` section from `.ai/project-context.md`
 2. The specific component(s), page(s), or spec relevant to the analysis
 
 Do NOT load backend service logic, migrations, or devops sections.
@@ -35,7 +35,7 @@ Do NOT load backend service logic, migrations, or devops sections.
 
 ## Workflow
 
-1. Read `[context.frontend]` from `.AIAgents/project-context.md`.
+1. Read `[context.frontend]` from `.ai/project-context.md`.
 2. Read the relevant source or spec file(s).
 3. Analyze the request: user journey, component boundaries, state shape, API needs.
 4. Produce structured analysis: options, tradeoffs, recommendation.
