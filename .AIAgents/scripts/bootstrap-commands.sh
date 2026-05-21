@@ -59,6 +59,14 @@ if [[ ! -d "$REPO_PATH" ]]; then
   exit 1
 fi
 
+# Warn if REPO_PATH is inside the module itself (common mistake: running from .AIAgents/)
+REPO_PATH="$(cd "$REPO_PATH" && pwd)"
+if [[ "$REPO_PATH" == "$MODULE_ROOT" || "$REPO_PATH" == "$MODULE_ROOT"/* ]]; then
+  echo "WARNING: --repo points inside the .AIAgents module ($REPO_PATH)." >&2
+  echo "  Run from your project root or pass --repo /path/to/your/project" >&2
+  exit 1
+fi
+
 case "$AGENT" in
   codex|gemini|claude|all) ;;
   *)
@@ -206,23 +214,136 @@ ensure_autoload_block() {
   mv "$tmp" "$file"
 }
 
-install_guidance() {
+write_guidance_block() {
   local file="$1"
-  local title="$2"
-  local command_path="$3"
-  local skills_path="$4"
+  local block_file="$2"
 
-  ensure_header "$file" "$title"
+  ensure_autoload_block "$file" "$block_file"
+  rm -f "$block_file"
+}
+
+skill_lines() {
+  local skills_path="$1"
+  for skill in backend frontend data testing devops; do
+    echo "- $skills_path/$skill/SKILL.md"
+  done
+}
+
+install_codex() {
+  install_files "$MODULE_ROOT/Codex/commands" "$REPO_PATH/.codex/commands"
+  install_skills "$MODULE_ROOT/Codex/skills" "$REPO_PATH/.codex/skills"
+
+  local file="$REPO_PATH/AGENTS.md"
+  ensure_header "$file" "AGENTS Instructions"
 
   local block_file
   block_file="$(mktemp)"
-
   cat > "$block_file" <<DOC
 $START_MARK
-Load command files from $command_path
+Load command files from .codex/commands/*.md
 
 Domain skills available (load only the skill for your current task):
-$(for skill in backend frontend data testing devops; do echo "- $skills_path/$skill/SKILL.md"; done)
+$(skill_lines ".codex/skills")
+
+Startup behavior (required):
+1. Run \`/scan\` first to create/update \`.ai/project-context.md\`.
+2. If \`project-context.md\` already exists, refresh it when stack, architecture, integrations, or standards change.
+3. Before any task, load only the skill matching your domain (backend, frontend, data, testing, devops).
+4. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
+5. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
+
+Recommended execution order:
+1. \`/scan\`       → populate .ai/project-context.md
+2. \`/spec\`       → define feature requirements — creates specs/features/<slug>/ and sets .ai/current
+3. \`/plan\`       → architecture + phased implementation plan (reads .ai/current automatically)
+4. \`/tasks\`      → execution task list with dependencies
+5. \`/implement\`  → execute tasks domain-by-domain
+6. \`/review\`     → validate implementation against spec acceptance criteria
+7. \`/skill\`      → create or edit a project-specific skill
+
+Navigation:
+- \`/status\`      → pipeline snapshot — stage, task counts, next step
+- \`/switch\`      → change active spec without re-running /spec
+- \`/fix\`         → minimal bug fix; add --trace for specs/bugs/<slug>/ traceability
+
+Multi-agent workflow:
+- Spec phase (/spec + /plan) → best handled by an analysis-focused agent (Gemini, Claude)
+- Implementation phase (/implement) → Codex excels at focused code generation per domain task
+- Review phase (/review) → Gemini for gap analysis, Codex for test coverage check
+- Shared artifact: specs/<type>/<slug>/ — any agent picks up via .ai/current
+
+Bootstrap command:
+\`./.AIAgents/scripts/bootstrap-commands.sh --repo . --agent all --mode copy\`
+$END_MARK
+DOC
+  write_guidance_block "$file" "$block_file"
+}
+
+install_gemini() {
+  install_files "$MODULE_ROOT/Gemini/commands" "$REPO_PATH/.gemini/commands"
+  install_skills "$MODULE_ROOT/Gemini/skills" "$REPO_PATH/.gemini/skills"
+
+  local file="$REPO_PATH/GEMINI.md"
+  ensure_header "$file" "Gemini Instructions"
+
+  local block_file
+  block_file="$(mktemp)"
+  cat > "$block_file" <<DOC
+$START_MARK
+Load command files from .gemini/commands/*.md
+
+Domain skills available (load only the skill for your current task):
+$(skill_lines ".gemini/skills")
+
+Startup behavior (required):
+1. Run \`/scan\` first to create/update \`.ai/project-context.md\`.
+2. If \`project-context.md\` already exists, refresh it when stack, architecture, integrations, or standards change.
+3. Before any task, load only the skill matching your domain (backend, frontend, data, testing, devops).
+4. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
+5. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
+
+Recommended execution order:
+1. \`/scan\`       → populate .ai/project-context.md
+2. \`/spec\`       → define feature requirements — Gemini excels here (creates .ai/current automatically)
+3. \`/plan\`       → architecture + phased implementation plan (reads .ai/current automatically)
+4. \`/tasks\`      → execution task list — Gemini surfaces sequencing risks
+5. \`/implement\`  → readiness review before handing off to Claude or Codex
+6. \`/review\`     → deep gap analysis between spec intent and implementation — Gemini's strength
+7. \`/skill\`      → create or edit a project-specific analysis skill
+
+Navigation:
+- \`/status\`      → pipeline snapshot with risk assessment
+- \`/switch\`      → change active spec; highlights outstanding review issues on switch
+- \`/fix\`         → root cause analysis + recommendation; add --trace for bug specs
+
+Multi-agent workflow:
+- Spec phase (/spec) → Gemini preferred — surfaces hidden requirements and risks
+- Implementation review (/implement) → Gemini validates readiness, hands off to Claude/Codex
+- Code review (/review) → Gemini's core strength — behavioral drift, edge case gaps
+- Shared artifact: specs/<type>/<slug>/ — any agent picks up via .ai/current
+
+Bootstrap command:
+\`./.AIAgents/scripts/bootstrap-commands.sh --repo . --agent all --mode copy\`
+$END_MARK
+DOC
+  write_guidance_block "$file" "$block_file"
+}
+
+install_claude() {
+  install_files "$MODULE_ROOT/Claude/commands" "$REPO_PATH/.claude/commands"
+  install_skills "$MODULE_ROOT/Claude/skills" "$REPO_PATH/.claude/skills"
+
+  local file="$REPO_PATH/CLAUDE.md"
+  ensure_header "$file" "Claude Instructions"
+
+  local block_file
+  block_file="$(mktemp)"
+  cat > "$block_file" <<DOC
+$START_MARK
+Load command files from .claude/commands/*.md
+
+Domain skills available (load only the skill for your current task):
+$(skill_lines ".claude/skills")
 
 Startup behavior (required):
 1. Run \`/scan\` first to create/update \`.ai/project-context.md\`.
@@ -245,30 +366,10 @@ Multi-agent workflow:
 - Shared artifact: specs/<feature>/ — any agent can hand off to another via these files
 
 Bootstrap command:
-\`./.AIAgents/scripts/bootstrap-commands.sh --repo $REPO_PATH --agent all --mode copy\`
+\`./.AIAgents/scripts/bootstrap-commands.sh --repo . --agent all --mode copy\`
 $END_MARK
 DOC
-
-  ensure_autoload_block "$file" "$block_file"
-  rm -f "$block_file"
-}
-
-install_codex() {
-  install_files "$MODULE_ROOT/Codex/commands" "$REPO_PATH/.codex/commands"
-  install_skills "$MODULE_ROOT/Codex/skills" "$REPO_PATH/.codex/skills"
-  install_guidance "$REPO_PATH/AGENTS.md" "AGENTS Instructions" ".codex/commands/*.md" ".codex/skills"
-}
-
-install_gemini() {
-  install_files "$MODULE_ROOT/Gemini/commands" "$REPO_PATH/.gemini/commands"
-  install_skills "$MODULE_ROOT/Gemini/skills" "$REPO_PATH/.gemini/skills"
-  install_guidance "$REPO_PATH/GEMINI.md" "Gemini Instructions" ".gemini/commands/*.md" ".gemini/skills"
-}
-
-install_claude() {
-  install_files "$MODULE_ROOT/Claude/commands" "$REPO_PATH/.claude/commands"
-  install_skills "$MODULE_ROOT/Claude/skills" "$REPO_PATH/.claude/skills"
-  install_guidance "$REPO_PATH/CLAUDE.md" "Claude Instructions" ".claude/commands/*.md" ".claude/skills"
+  write_guidance_block "$file" "$block_file"
 }
 
 if [[ "$AGENT" == "codex" || "$AGENT" == "all" ]]; then

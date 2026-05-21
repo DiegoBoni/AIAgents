@@ -1,7 +1,5 @@
 # AGENTS Instructions
 
-Load command files from `.AIAgents/.codex/commands/*.md`.
-
 <!-- .AIAgents Autoload Start -->
 Load command files from .codex/commands/*.md
 
@@ -40,5 +38,5 @@ Multi-agent workflow:
 - Shared artifact: specs/<type>/<slug>/ — any agent picks up via .ai/current
 
 Bootstrap command:
-`./.AIAgents/scripts/bootstrap-commands.sh --repo /Users/boni/Documents/New project --agent all --mode copy`
+`./.AIAgents/scripts/bootstrap-commands.sh --repo . --agent all --mode copy`
 <!-- .AIAgents Autoload End -->

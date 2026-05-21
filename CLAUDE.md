@@ -1,7 +1,5 @@
 # Claude Instructions
 
-Load command files from `.claude/commands/*.md`.
-
 <!-- .AIAgents Autoload Start -->
 Load command files from .claude/commands/*.md
 
