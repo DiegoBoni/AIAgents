@@ -6,11 +6,11 @@ Load command files from `.claude/commands/*.md`.
 Load command files from .claude/commands/*.md
 
 Domain skills available (load only the skill for your current task):
-- .claude/skills/backend/SKILL.md
-- .claude/skills/frontend/SKILL.md
-- .claude/skills/data/SKILL.md
-- .claude/skills/testing/SKILL.md
-- .claude/skills/devops/SKILL.md
+- .AIAgents/Claude/skills/backend/SKILL.md
+- .AIAgents/Claude/skills/frontend/SKILL.md
+- .AIAgents/Claude/skills/data/SKILL.md
+- .AIAgents/Claude/skills/testing/SKILL.md
+- .AIAgents/Claude/skills/devops/SKILL.md
 
 Startup behavior (required):
 1. Run `/scan` first to create/update `.ai/project-context.md`.
