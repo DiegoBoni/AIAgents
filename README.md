@@ -33,7 +33,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/install.sh) --agent all --mode link
 ```
 
-After install, open the project in your agent and run `/context` to get started.
+After install, open the project in your agent and run `/scan` to get started.
 
 ---
 
@@ -59,7 +59,7 @@ Every task loads:        Backend task loads:
 
 ### 1. One context file, five domain sections
 
-After running `/context`, the file `.AIAgents/project-context.md` contains both a global summary and five independently loadable domain sections:
+After running `/scan`, the file `.AIAgents/project-context.md` contains both a global summary and five independently loadable domain sections:
 
 ```
 project-context.md
@@ -88,13 +88,19 @@ Skills are tuned per agent: Claude for broad implementation, Codex for focused c
 
 | Command | Invoke as | When to use | Output |
 |---|---|---|---|
-| `context.md` | `/context` | Once per project, on stack change | `.ai/project-context.md` |
+| `scan.md` | `/scan` | Once per project, on stack change | `.ai/project-context.md` |
 | `spec.md` | `/spec` | Once per feature | `specs/<feature>/spec.md` |
 | `plan.md` | `/plan` | Once per feature | `specs/<feature>/plan.md` |
 | `tasks.md` | `/tasks` | Once per feature | `specs/<feature>/tasks.md` |
+| `implement.md` | `/implement` | After /tasks — execute domain-by-domain | Code changes + progress report |
 | `fix.md` | `/fix` | Per bug — skips spec/plan/tasks | Fixed code + root cause |
+| `skill.md` | `/skill` | Create or update a project skill | `.claude/skills/<name>/SKILL.md` |
 
 `/fix` auto-detects the domain from the file path, loads only that context section, and applies the minimal fix.
+
+`/implement` uses TodoWrite to track task progress and can spawn sub-agents for parallel domain work.
+
+`/skill` reads the current project context to generate a skill tailored to this project's stack.
 
 ---
 
@@ -103,27 +109,48 @@ Skills are tuned per agent: Claude for broad implementation, Codex for focused c
 ```
 New project setup:
   1. bootstrap   →  install commands + skills into target repo
-  2. /context    →  scan repo, populate .ai/project-context.md
+  2. /scan       →  scan repo, populate .ai/project-context.md
 
-New feature:
-  3. /spec <description>   →  spec.md
+New feature (single agent):
+  3. /spec <description>   →  spec.md (includes handoff block)
   4. /plan                 →  plan.md
   5. /tasks                →  tasks.md
-  6. skill per task        →  loads only [context.<domain>]
+  6. /implement            →  executes tasks, tracks via TodoWrite
+
+New feature (multi-agent):
+  3. Gemini: /spec         →  spec.md (Gemini excels at requirements analysis)
+  4. Claude: /plan         →  reads spec.md, produces plan.md
+  5. Claude: /tasks        →  produces tasks.md
+  6. Codex:  /implement    →  focused code generation per domain task
+  All agents share: specs/<feature>/ and .ai/project-context.md
 
 Bug fix:
   /fix <description> <file>   →  detects domain, minimal fix, root cause
+
+Custom skill:
+  /skill <name> <domain>      →  creates project-specific skill from current context
 ```
 
 ---
 
 ## Agent roles
 
-| Agent | Strength | Use for |
-|---|---|---|
-| **Claude** | Broad reasoning + implementation | Features, refactors, complex multi-file changes |
-| **Codex** | Focused code generation | Targeted implementation, tests, migrations |
-| **Gemini** | Analysis + requirements | Design reviews, risk analysis, spec clarification |
+| Agent | Strength | Use for | Commands |
+|---|---|---|---|
+| **Claude** | Broad reasoning + implementation | Features, refactors, complex multi-file changes, harness orchestration | `/scan` `/spec` `/plan` `/tasks` `/implement` `/skill` |
+| **Codex** | Focused code generation | Targeted implementation, tests, migrations | `/implement` `/fix` |
+| **Gemini** | Analysis + requirements | Design reviews, risk analysis, spec clarification | `/spec` `/implement` (readiness review) |
+
+### Multi-agent pattern
+
+Agents share state through files in `specs/<feature>/` and `.ai/project-context.md`.
+The `## Handoff` block at the end of every `spec.md` tells the next agent:
+- who wrote the spec
+- which agent should own planning and implementation
+- confidence level and blocking questions
+
+Claude can also orchestrate sub-agents internally via the Agent tool, spinning up
+independent domain agents in parallel within a single `/implement` run.
 
 ---
 
@@ -178,7 +205,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 
 ```
 <your-project>/
-├── .claude/commands/    ← /context  /spec  /plan  /tasks
+├── .claude/commands/    ← /scan  /spec  /plan  /tasks  /implement  /skill
 ├── .claude/skills/      ← backend  frontend  data  testing  devops
 ├── .codex/  ...
 ├── .gemini/ ...
@@ -191,11 +218,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 ### First session in any project
 
 ```
-1. /context              → scans repo, populates .ai/project-context.md
-2. /spec <feature>       → creates specs/<feature>/spec.md
+1. /scan                 → scans repo, populates .ai/project-context.md
+2. /spec <feature>       → creates specs/<feature>/spec.md (with handoff block for multi-agent)
 3. /plan                 → creates specs/<feature>/plan.md
 4. /tasks                → creates specs/<feature>/tasks.md
-   then: load the domain skill for your task (backend / frontend / data / testing / devops)
+5. /implement            → executes tasks domain-by-domain with progress tracking
+   /skill <name> <domain> → create or update a project-specific skill
 ```
 
 ---
@@ -219,10 +247,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 │
 ├── Claude/                        # Source files for Claude
 │   ├── commands/
-│   │   ├── context.md
+│   │   ├── scan.md
 │   │   ├── spec.md
 │   │   ├── plan.md
-│   │   └── tasks.md
+│   │   ├── tasks.md
+│   │   ├── implement.md
+│   │   ├── fix.md
+│   │   └── skill.md
 │   └── skills/
 │       ├── backend/SKILL.md
 │       ├── frontend/SKILL.md
@@ -233,10 +264,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 │
 ├── Codex/                         # Source files for Codex
 │   ├── commands/
-│   │   ├── context.md
+│   │   ├── scan.md
 │   │   ├── spec.md
 │   │   ├── plan.md
-│   │   └── tasks.md
+│   │   ├── tasks.md
+│   │   ├── implement.md
+│   │   ├── fix.md
+│   │   └── skill.md
 │   └── skills/
 │       ├── backend/SKILL.md
 │       ├── frontend/SKILL.md
@@ -247,10 +281,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 │
 ├── Gemini/                        # Source files for Gemini
 │   ├── commands/
-│   │   ├── context.md
+│   │   ├── scan.md
 │   │   ├── spec.md
 │   │   ├── plan.md
-│   │   └── tasks.md
+│   │   ├── tasks.md
+│   │   ├── implement.md   (readiness review mode)
+│   │   ├── fix.md
+│   │   └── skill.md
 │   └── skills/
 │       ├── backend/SKILL.md
 │       ├── frontend/SKILL.md
@@ -277,7 +314,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 │   ├── commands/
 │   └── skills/
 ├── .ai/
-│   └── project-context.md         # populated by /context
+│   └── project-context.md         # populated by /scan
 ├── CLAUDE.md                      # Claude startup instructions
 ├── AGENTS.md                      # Codex startup instructions
 └── GEMINI.md                      # Gemini startup instructions
@@ -311,7 +348,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DiegoBoni/AIAgents/main/inst
 ## Design principles
 
 - **Minimal context per call** — skills load only what they need, not the full project
-- **Evidence-based context** — `/context` extracts facts from the repo, not assumptions
+- **Evidence-based context** — `/scan` extracts facts from the repo, not assumptions
 - **Portable** — the entire kit is plain Markdown, works with any agent that reads files
 - **Composable** — commands and skills are independent; use only what fits your workflow
 - **Transparent** — every assumption is marked, every open question is surfaced

@@ -45,7 +45,7 @@ The `.AIAgents/` folder stays **only in this source repo** — it is not copied 
 1. Run bootstrap — it copies source files into the correct native folders at the project root.
 2. Each agent runtime scans only its own folder (`.claude/`, `.codex/`, `.gemini/`).
 3. Skills live in `skills/<name>/SKILL.md` within the agent folder.
-4. Commands are single `.md` files invoked by name (e.g. `context.md` → `/context`).
+4. Commands are single `.md` files invoked by name (e.g. `scan.md` → `/scan`).
 
 ## Agent roles
 

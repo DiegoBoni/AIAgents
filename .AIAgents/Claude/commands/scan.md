@@ -30,7 +30,7 @@ without needing the rest of the file.
    - If a domain has no evidence in the repo, write `N/A — not detected` for each field.
    - Mark uncertain fields as `NEEDS CLARIFICATION`.
 5. Write the result to `.ai/project-context.md`.
-6. Update `CLAUDE.md` with any project-specific constraints discovered (path reference: `.claude/commands/*.md`).
+6. Update `CLAUDE.md` with any project-specific constraints discovered.
 7. Return:
    - Confidence level per domain (high / medium / low)
    - List of assumptions made

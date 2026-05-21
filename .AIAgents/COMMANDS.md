@@ -18,11 +18,30 @@ This module provides reusable command specs by agent.
 
 | Command | Invoke as | Input | Output | When |
 |---|---|---|---|---|
-| `context.md` | `/context` | Repo scan (optional domain focus) | `.ai/project-context.md` | Once per project / on stack change |
+| `scan.md` | `/scan` | Repo scan (optional domain focus) | `.ai/project-context.md` | Once per project / on stack change |
 | `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` | Once per feature |
 | `plan.md` | `/plan` | `specs/<feature>/spec.md` | `specs/<feature>/plan.md` | Once per feature |
 | `tasks.md` | `/tasks` | `specs/<feature>/plan.md` | `specs/<feature>/tasks.md` | Once per feature |
+| `implement.md` | `/implement` | Feature name or `specs/<feature>/tasks.md` | Code changes + progress report | Per feature, after /tasks |
 | `fix.md` | `/fix` | Bug description + file path(s) | Fixed code + root cause | Per bug, skips spec/plan/tasks |
+| `skill.md` | `/skill` | Skill name + domain | `.claude/skills/<name>/SKILL.md` | When adding or updating a skill |
+
+## Multi-agent workflow
+
+Each command has a recommended `agent_role`. Different agents can own different phases:
+
+| Phase | Recommended agent | Command |
+|---|---|---|
+| Context scan | Any | `/scan` |
+| Spec writing | Gemini or Claude | `/spec` |
+| Architecture planning | Claude | `/plan` |
+| Task breakdown | Claude or Codex | `/tasks` |
+| Implementation | Claude or Codex | `/implement` |
+| Review / analysis | Gemini | `/implement` (Gemini version = readiness review) |
+| Skill authoring | Claude | `/skill` |
+
+Agents hand off via shared files in `specs/<feature>/` — the `## Handoff` block at the end
+of each spec tells the next agent who should pick up and with what confidence level.
 
 ## Domain skills
 
@@ -35,6 +54,8 @@ Skills load only the relevant section of `project-context.md` — not the full f
 | `data/SKILL.md` | DB, migrations, models | Claude / Codex / Gemini | `[context.data]` |
 | `testing/SKILL.md` | Tests, coverage, CI | Claude / Codex / Gemini | `[context.testing]` |
 | `devops/SKILL.md` | CI/CD, infra, secrets | Claude / Codex / Gemini | `[context.devops]` |
+
+Custom skills can be created with `/skill` — any name, any domain.
 
 ## Bootstrap
 
@@ -53,8 +74,8 @@ Bootstrap also:
 
 - copies domain skills into `.AIAgents/.<agent>/skills/`
 - injects startup guidance into `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md`
-- enforces `/context` as first command
-- creates `.AIAgents/project-context.md` if missing
+- enforces `/scan` as first command
+- creates `.ai/project-context.md` if missing
 
 ## Integration hint
 

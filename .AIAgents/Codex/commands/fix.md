@@ -1,7 +1,7 @@
 ---
-description: Fix a bug with minimal context — loads only the domain section relevant to the affected file.
-arguments: Bug description and/or file path(s)
-output: Code fix + root cause summary
+description: Fix a bug with minimal context. Add --trace to create a bug spec in specs/bugs/ for traceability.
+arguments: Bug description and/or file path(s). Optional: --trace
+output: Code fix + root cause summary. With --trace: also specs/bugs/<slug>/spec.md
 ---
 
 ## User Input
@@ -10,37 +10,18 @@ output: Code fix + root cause summary
 $ARGUMENTS
 ```
 
-## Goal
-
-Diagnose and fix the bug with the smallest possible context footprint.
-Load only the domain section that matches the affected code — nothing else.
-
 ## Steps
 
-1. Read the bug description and identify the affected file(s).
-2. Determine the domain from the file path or description:
-   - API / service / auth → `[context.backend]`
-   - Component / page / state → `[context.frontend]`
-   - Migration / model / query → `[context.data]`
-   - Test file → `[context.testing]`
-   - Pipeline / infra / config → `[context.devops]`
-3. Read **only** that domain section from `.ai/project-context.md`.
-4. Read the affected file(s) — no more than needed.
-5. Identify root cause.
-6. Apply the minimal fix. Run lint and relevant tests after.
-7. Return: root cause, fix summary, test result, cross-domain flags.
-
-## Output
-
-- Fixed file(s)
-- Root cause: one sentence
-- Fix summary: what changed and why
-- Lint/test result
-- Cross-domain impact flags (if any)
+1. Parse `--trace` flag. If present, create `specs/bugs/<slug>/spec.md` and update `.ai/current`.
+2. Determine domain from file path or description.
+3. Read only `[context.<domain>]` from `.ai/project-context.md`.
+4. Read the affected file(s) — no more.
+5. Identify root cause. Apply minimal fix. Run lint and relevant tests.
+6. Return: root cause, fix summary, test result, cross-domain flags.
+7. If `--trace`: update `spec.md` with actual root cause and fix summary.
 
 ## Rules
 
-- Load only the matching domain section — not the full project context
-- Do not refactor surrounding code unless it is the direct cause
-- Run tests after fixing — report pass/fail
-- If fix touches multiple domains, flag and split into separate tasks
+- Load only the matching domain section.
+- Do not refactor surrounding code unless it causes the bug.
+- `--trace` is opt-in — skip for trivial one-line fixes.

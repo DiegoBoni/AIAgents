@@ -83,9 +83,14 @@ Luego pushealo a GitHub como primer commit.
 
 Una vez confirmado .ai/project-context.md:
 
+/scan
+  Escaneá el repositorio y generá .ai/project-context.md con secciones por dominio.
+  Corré esto primero en cada proyecto nuevo o cuando cambia el stack.
+
 /spec <descripción>
   Derivá actores, flujos de usuario, casos borde y requisitos testeables.
   Agregá suposiciones y preguntas abiertas. Guardá en specs/<feature>/spec.md.
+  Incluí el bloque ## Handoff para que otro agente pueda continuar.
 
 /plan
   Leé spec.md. Definí arquitectura, modelo de datos y plan por fases.
@@ -95,8 +100,20 @@ Una vez confirmado .ai/project-context.md:
   Leé plan.md. Convertí los milestones en lista de tareas con dependencias
   y validaciones. Guardá en specs/<feature>/tasks.md.
 
-Luego implementá tarea por tarea — un dominio a la vez.
+/implement
+  Ejecutá las tareas de tasks.md dominio por dominio.
+  Usá TodoWrite para trackear progreso. Delegá dominios independientes a sub-agentes.
+
+/skill <nombre> <dominio>
+  Creá o editá un skill específico al proyecto actual.
+  Guardá en .claude/skills/<nombre>/SKILL.md.
+
 Abrí una rama por feature y un PR al terminar.
+
+Flujo multi-agente recomendado:
+  - Gemini o Claude → /spec (análisis de requisitos)
+  - Claude → /plan + /tasks (arquitectura y descomposición)
+  - Claude o Codex → /implement (generación de código, un dominio a la vez)
 
 ## Fase 3 — Implementación (domain-scoped)
 
