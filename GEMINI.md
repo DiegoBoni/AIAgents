@@ -21,16 +21,23 @@ Startup behavior (required):
 
 Recommended execution order:
 1. `/scan`       → populate .ai/project-context.md
-2. `/spec`       → define feature requirements (Gemini excels here — analysis and requirements)
-3. `/plan`       → architecture + phased implementation plan
-4. `/tasks`      → execution task list with dependencies
+2. `/spec`       → define feature requirements — Gemini excels here (creates .ai/current automatically)
+3. `/plan`       → architecture + phased implementation plan (reads .ai/current automatically)
+4. `/tasks`      → execution task list — Gemini surfaces sequencing risks
 5. `/implement`  → readiness review before handing off to Claude or Codex
-6. `/skill`      → create or edit a project-specific analysis skill
+6. `/review`     → deep gap analysis between spec intent and implementation — Gemini's strength
+7. `/skill`      → create or edit a project-specific analysis skill
+
+Navigation:
+- `/status`      → pipeline snapshot with risk assessment
+- `/switch`      → change active spec; highlights outstanding review issues on switch
+- `/fix`         → root cause analysis + recommendation; add --trace for bug specs
 
 Multi-agent workflow:
-- Spec phase (/spec) → Gemini preferred (strong requirements analysis)
-- Implementation phase (/implement) → Gemini runs readiness review, then hands off to Claude/Codex
-- Shared artifact: specs/<feature>/ — any agent can hand off to another via these files
+- Spec phase (/spec) → Gemini preferred — surfaces hidden requirements and risks
+- Implementation review (/implement) → Gemini validates readiness, hands off to Claude/Codex
+- Code review (/review) → Gemini's core strength — behavioral drift, edge case gaps
+- Shared artifact: specs/<type>/<slug>/ — any agent picks up via .ai/current
 
 Bootstrap command:
 `./.AIAgents/scripts/bootstrap-commands.sh --repo /Users/boni/Documents/New project --agent all --mode copy`

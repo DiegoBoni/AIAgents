@@ -16,15 +16,47 @@ This module provides reusable command specs by agent.
 
 ## Command set
 
+### Pipeline commands
+
 | Command | Invoke as | Input | Output | When |
 |---|---|---|---|---|
 | `scan.md` | `/scan` | Repo scan (optional domain focus) | `.ai/project-context.md` | Once per project / on stack change |
-| `spec.md` | `/spec` | Feature description | `specs/<feature>/spec.md` | Once per feature |
-| `plan.md` | `/plan` | `specs/<feature>/spec.md` | `specs/<feature>/plan.md` | Once per feature |
-| `tasks.md` | `/tasks` | `specs/<feature>/plan.md` | `specs/<feature>/tasks.md` | Once per feature |
-| `implement.md` | `/implement` | Feature name or `specs/<feature>/tasks.md` | Code changes + progress report | Per feature, after /tasks |
-| `fix.md` | `/fix` | Bug description + file path(s) | Fixed code + root cause | Per bug, skips spec/plan/tasks |
+| `spec.md` | `/spec` | Feature description | `specs/features/<slug>/spec.md` | Once per feature |
+| `plan.md` | `/plan` | auto from `.ai/current` | `specs/features/<slug>/plan.md` | Once per feature |
+| `tasks.md` | `/tasks` | auto from `.ai/current` | `specs/features/<slug>/tasks.md` | Once per feature |
+| `implement.md` | `/implement` | auto from `.ai/current` | Code changes + progress report | Per feature, after /tasks |
+| `review.md` | `/review` | auto from `.ai/current` | `specs/<type>/<slug>/review.md` | After /implement |
+| `fix.md` | `/fix` | Bug description + file path(s) | Fixed code + root cause | Per bug; add `--trace` for spec |
 | `skill.md` | `/skill` | Skill name + domain | `.claude/skills/<name>/SKILL.md` | When adding or updating a skill |
+
+### Navigation & ops commands
+
+| Command | Invoke as | Input | Output | When |
+|---|---|---|---|---|
+| `status.md` | `/status` | none | Inline pipeline snapshot | Anytime — no files written |
+| `switch.md` | `/switch` | Spec slug (optional) | Updates `.ai/current` | When changing active spec |
+| `harness.md` | `/harness` | `--minimal` or `--full` | `.claude/settings.json` + `.ai/log/` | Once per project setup (Claude only) |
+
+### Active spec pointer
+
+Most commands read `.ai/current` automatically — no path argument needed.
+
+```
+.ai/current          ← one line: e.g. specs/features/checkout-flow
+specs/
+├── features/
+│   └── checkout-flow/
+│       ├── spec.md
+│       ├── plan.md
+│       ├── tasks.md
+│       └── review.md
+└── bugs/
+    └── payment-fix/
+        ├── spec.md       (created by /fix --trace)
+        └── review.md
+```
+
+To switch: `/switch user-auth` or `/switch` to list all available specs.
 
 ## Multi-agent workflow
 
@@ -37,11 +69,27 @@ Each command has a recommended `agent_role`. Different agents can own different 
 | Architecture planning | Claude | `/plan` |
 | Task breakdown | Claude or Codex | `/tasks` |
 | Implementation | Claude or Codex | `/implement` |
-| Review / analysis | Gemini | `/implement` (Gemini version = readiness review) |
+| Implementation review | Gemini | `/implement` (Gemini = readiness check) |
+| Code review | Gemini or Claude | `/review` |
+| Harness setup | Claude only | `/harness` |
 | Skill authoring | Claude | `/skill` |
+| Navigation | Any | `/status`, `/switch` |
 
-Agents hand off via shared files in `specs/<feature>/` — the `## Handoff` block at the end
-of each spec tells the next agent who should pick up and with what confidence level.
+Agents hand off via shared files in `specs/<type>/<slug>/` — the `## Handoff` block in each
+`spec.md` tells the next agent who should pick up and at what confidence level.
+
+## Harness integration (Claude Code)
+
+`/harness` wires the Claude Code harness into the project:
+
+```
+.claude/settings.json    ← hooks + domain-scoped permissions
+.ai/log/session.log      ← audit trail of every file edit
+.ai/scripts/
+└── on-session-end.sh    ← runs after every Claude Code session
+```
+
+Hooks fire automatically — no manual steps after `/harness` is run once.
 
 ## Domain skills
 
@@ -72,15 +120,14 @@ Options:
 
 Bootstrap also:
 
-- copies domain skills into `.AIAgents/.<agent>/skills/`
+- copies domain skills into `.<agent>/skills/`
 - injects startup guidance into `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md`
-- enforces `/scan` as first command
-- creates `.ai/project-context.md` if missing
+- creates `.ai/project-context.md`, `specs/features/`, and `specs/bugs/` if missing
 
 ## Integration hint
 
 Map each agent runtime to its own folder:
 
-- Codex: `.AIAgents/.codex/commands/*.md` + `.AIAgents/.codex/skills/*/SKILL.md`
-- Gemini: `.AIAgents/.gemini/commands/*.md` + `.AIAgents/.gemini/skills/*/SKILL.md`
-- Claude: `.AIAgents/.claude/commands/*.md` + `.AIAgents/.claude/skills/*/SKILL.md`
+- Codex: `.codex/commands/*.md` + `.codex/skills/*/SKILL.md`
+- Gemini: `.gemini/commands/*.md` + `.gemini/skills/*/SKILL.md`
+- Claude: `.claude/commands/*.md` + `.claude/skills/*/SKILL.md`

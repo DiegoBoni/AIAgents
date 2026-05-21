@@ -21,16 +21,23 @@ Startup behavior (required):
 
 Recommended execution order:
 1. `/scan`       → populate .ai/project-context.md
-2. `/spec`       → define feature requirements (multi-agent: spec-writer role)
-3. `/plan`       → architecture + phased implementation plan
+2. `/spec`       → define feature requirements — creates specs/features/<slug>/ and sets .ai/current
+3. `/plan`       → architecture + phased implementation plan (reads .ai/current automatically)
 4. `/tasks`      → execution task list with dependencies
-5. `/implement`  → execute tasks domain-by-domain with progress tracking
-6. `/skill`      → create or edit a project-specific skill
+5. `/implement`  → execute tasks domain-by-domain
+6. `/review`     → validate implementation against spec acceptance criteria
+7. `/skill`      → create or edit a project-specific skill
+
+Navigation:
+- `/status`      → pipeline snapshot — stage, task counts, next step
+- `/switch`      → change active spec without re-running /spec
+- `/fix`         → minimal bug fix; add --trace for specs/bugs/<slug>/ traceability
 
 Multi-agent workflow:
 - Spec phase (/spec + /plan) → best handled by an analysis-focused agent (Gemini, Claude)
-- Implementation phase (/implement) → best handled by a code-generation agent (Claude, Codex)
-- Shared artifact: specs/<feature>/ — any agent can hand off to another via these files
+- Implementation phase (/implement) → Codex excels at focused code generation per domain task
+- Review phase (/review) → Gemini for gap analysis, Codex for test coverage check
+- Shared artifact: specs/<type>/<slug>/ — any agent picks up via .ai/current
 
 Bootstrap command:
 `./.AIAgents/scripts/bootstrap-commands.sh --repo /Users/boni/Documents/New project --agent all --mode copy`
