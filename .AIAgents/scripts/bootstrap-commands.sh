@@ -336,6 +336,10 @@ install_claude() {
   local file="$REPO_PATH/CLAUDE.md"
   ensure_header "$file" "Claude Instructions"
 
+  if ! grep -qF 'Load command files from `.claude/commands/*.md`.' "$file"; then
+    printf '\nLoad command files from `.claude/commands/*.md`.\n' >> "$file"
+  fi
+
   local block_file
   block_file="$(mktemp)"
   cat > "$block_file" <<DOC
