@@ -4,14 +4,13 @@ This module provides reusable command specs by agent.
 
 ## Layout
 
-- `.AIAgents/Codex/commands/`
-- `.AIAgents/Gemini/commands/`
-- `.AIAgents/Claude/commands/`
-- `.AIAgents/.codex/commands/`
-- `.AIAgents/.gemini/commands/`
-- `.AIAgents/.claude/commands/`
-- `.AIAgents/_shared/templates/command-template.md`
-- `.AIAgents/_shared/templates/project-context-template.md`
+- `.AIAgents/Claude/commands/`   ← installed to `.claude/commands/`
+- `.AIAgents/Claude/skills/`     ← installed to `.claude/skills/`
+- `.AIAgents/Codex/commands/`    ← installed to `.codex/commands/`
+- `.AIAgents/Codex/skills/`      ← installed to `.codex/skills/`
+- `.AIAgents/Gemini/commands/`   ← installed to `.gemini/commands/`
+- `.AIAgents/Gemini/skills/`     ← installed to `.gemini/skills/`
+- `.AIAgents/_shared/templates/`
 - `.AIAgents/scripts/bootstrap-commands.sh`
 
 ## Command set

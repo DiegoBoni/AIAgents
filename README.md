@@ -338,31 +338,49 @@ Switch to another spec: `/switch`
 │       └── spec-template.md
 │
 ├── Claude/
-│   └── commands/
-│       ├── scan.md        harness.md
-│       ├── spec.md        review.md
-│       ├── plan.md        status.md
-│       ├── tasks.md       switch.md
-│       ├── implement.md   skill.md
-│       └── fix.md
+│   ├── commands/
+│   │   ├── scan.md        harness.md
+│   │   ├── spec.md        review.md
+│   │   ├── plan.md        status.md
+│   │   ├── tasks.md       switch.md
+│   │   ├── implement.md   skill.md
+│   │   └── fix.md
+│   └── skills/
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       └── devops/SKILL.md
 │
 ├── Codex/
-│   └── commands/
-│       ├── scan.md        review.md
-│       ├── spec.md        status.md
-│       ├── plan.md        switch.md
-│       ├── tasks.md       skill.md
-│       ├── implement.md
-│       └── fix.md
+│   ├── commands/
+│   │   ├── scan.md        review.md
+│   │   ├── spec.md        status.md
+│   │   ├── plan.md        switch.md
+│   │   ├── tasks.md       skill.md
+│   │   ├── implement.md
+│   │   └── fix.md
+│   └── skills/
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       └── devops/SKILL.md
 │
 ├── Gemini/
-│   └── commands/
-│       ├── scan.md        review.md
-│       ├── spec.md        status.md
-│       ├── plan.md        switch.md
-│       ├── tasks.md       skill.md
-│       ├── implement.md   (readiness review mode)
-│       └── fix.md
+│   ├── commands/
+│   │   ├── scan.md        review.md
+│   │   ├── spec.md        status.md
+│   │   ├── plan.md        switch.md
+│   │   ├── tasks.md       skill.md
+│   │   ├── implement.md   (readiness review mode)
+│   │   └── fix.md
+│   └── skills/
+│       ├── backend/SKILL.md
+│       ├── frontend/SKILL.md
+│       ├── data/SKILL.md
+│       ├── testing/SKILL.md
+│       └── devops/SKILL.md
 │
 └── scripts/
     └── bootstrap-commands.sh
