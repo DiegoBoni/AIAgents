@@ -1,3 +1,8 @@
+---
+name: backend
+description: Handle backend implementation tasks — endpoints, business logic, services, auth, and integrations. Loads only [context.backend] from project-context.md.
+---
+
 # Skill: backend
 
 ## Metadata

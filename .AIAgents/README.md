@@ -1,7 +1,7 @@
 # AI Module (.AIAgents)
 
 Reusable Markdown module to import into any software project.
-Provides commands for the planning workflow and domain-scoped skills to minimize token usage per task.
+Provides workflow skills for the planning pipeline and domain-scoped skills to minimize token usage per task.
 
 ---
 
@@ -9,8 +9,7 @@ Provides commands for the planning workflow and domain-scoped skills to minimize
 
 ```
 .AIAgents/
-├── project-context.md             # Populated by cmd.context — source of truth
-├── COMMANDS.md                    # Command reference
+├── COMMANDS.md                    # Command reference (legacy)
 ├── ROUTING.md                     # Agent-to-folder mapping
 │
 ├── _shared/templates/             # Base templates
@@ -20,20 +19,33 @@ Provides commands for the planning workflow and domain-scoped skills to minimize
 │   └── spec-template.md
 │
 ├── Claude/                        # Claude source files
-│   ├── commands/                  # cmd.context, cmd.specify, cmd.plan, cmd.tasks
-│   └── skills/                    # backend, frontend, data, testing, devops, architecture-review
+│   ├── commands/                  # Slash commands (legacy, kept for compatibility)
+│   └── skills/
+│       ├── scan/                  # Workflow: populate project-context.md
+│       ├── spec/                  # Workflow: write feature/bug spec
+│       ├── plan/                  # Workflow: phased implementation plan
+│       ├── tasks/                 # Workflow: atomic task list
+│       ├── implement/             # Workflow: execute tasks domain-by-domain
+│       ├── spec-review/           # Workflow: validate implementation vs spec
+│       ├── fix/                   # Workflow: minimal bug fix
+│       ├── status/                # Workflow: pipeline snapshot
+│       ├── switch/                # Workflow: change active spec
+│       ├── mkskill/               # Workflow: create/update a project skill
+│       ├── harness/               # Workflow: configure Claude Code hooks
+│       ├── backend/               # Domain: backend tasks
+│       ├── frontend/              # Domain: frontend tasks
+│       ├── data/                  # Domain: data layer tasks
+│       ├── testing/               # Domain: test writing and coverage
+│       ├── devops/                # Domain: CI/CD and infrastructure
+│       └── architecture-review/   # Domain: architecture decisions
 │
 ├── Codex/                         # Codex source files
-│   ├── commands/
-│   └── skills/
+│   ├── commands/                  # Slash commands (primary mechanism for Codex)
+│   └── skills/                    # Domain skills
 │
 ├── Gemini/                        # Gemini source files
-│   ├── commands/
-│   └── skills/
-│
-├── .claude/commands/              # Native Claude loader (installed by bootstrap)
-├── .codex/commands/               # Native Codex loader (installed by bootstrap)
-├── .gemini/commands/              # Native Gemini loader (installed by bootstrap)
+│   ├── commands/                  # Slash commands (primary mechanism for Gemini)
+│   └── skills/                    # Domain skills
 │
 └── scripts/
     └── bootstrap-commands.sh
@@ -41,25 +53,51 @@ Provides commands for the planning workflow and domain-scoped skills to minimize
 
 ---
 
-## Key concept: domain skills
+## Key concepts
 
-Each skill loads only one section of `project-context.md`, not the full file.
+### Workflow skills (Claude Code)
 
-| Skill | Reads |
-|---|---|
-| `backend` | `[context.backend]` |
-| `frontend` | `[context.frontend]` |
-| `data` | `[context.data]` |
-| `testing` | `[context.testing]` |
-| `devops` | `[context.devops]` |
+Claude Code discovers skills from `.claude/skills/*/SKILL.md` and exposes them via the Skill tool.
+Each workflow skill is a self-contained action prompt for one step of the planning pipeline:
 
+| Skill        | Purpose                                              |
+|--------------|------------------------------------------------------|
+| `scan`       | Populate `.ai/project-context.md` from repo evidence |
+| `spec`       | Write a feature or bug spec, set `.ai/current`       |
+| `plan`       | Phased implementation plan from spec                 |
+| `tasks`      | Atomic task list with domain assignments             |
+| `implement`  | Execute tasks domain-by-domain with sub-agents       |
+| `spec-review`| Validate implementation against spec criteria        |
+| `fix`        | Minimal bug fix; `--trace` for bug spec traceability |
+| `status`     | Read-only pipeline snapshot                          |
+| `switch`     | Change active spec without re-running spec           |
+| `mkskill`    | Create or update a project-specific skill            |
+| `harness`    | Configure Claude Code hooks and permissions          |
+
+### Domain skills (all agents)
+
+Each domain skill loads only one section of `project-context.md`, not the full file.
 This keeps token usage low and context noise minimal.
 
----
+| Skill    | Reads                  |
+|----------|------------------------|
+| `backend`  | `[context.backend]`  |
+| `frontend` | `[context.frontend]` |
+| `data`     | `[context.data]`     |
+| `testing`  | `[context.testing]`  |
+| `devops`   | `[context.devops]`   |
 
-## Important
+### Agent mechanisms
 
-Folder names alone do not activate skills or commands. Each agent must be configured to discover and load the corresponding files. The bootstrap script handles this automatically.
+| Agent  | Workflow commands   | Domain skills      | Config file  |
+|--------|---------------------|--------------------|--------------|
+| Claude | `.claude/skills/`   | `.claude/skills/`  | `CLAUDE.md`  |
+| Codex  | `.codex/commands/`  | `.codex/skills/`   | `AGENTS.md`  |
+| Gemini | `.gemini/commands/` | `.gemini/skills/`  | `GEMINI.md`  |
+
+Claude Code uses the native skill system (`skills/*/SKILL.md`) — these appear in the
+system context and are invoked via the Skill tool. Codex and Gemini use slash commands
+loaded from their respective `commands/` folders.
 
 ---
 
@@ -67,8 +105,7 @@ Folder names alone do not activate skills or commands. Each agent must be config
 
 1. Copy `.AIAgents/` into a target project.
 2. Run `./.AIAgents/scripts/bootstrap-commands.sh --repo <project-path> --agent all --mode copy`.
-3. Start every new session with `cmd.context` to populate `project-context.md`.
-4. For each implementation task, load only the domain skill that matches your work.
-5. Keep `project-context.md` updated whenever stack, integrations, or standards change.
-
-See the root `README.md` for the full workflow and design reference.
+3. Start every new session with the `scan` skill to populate `project-context.md`.
+4. Use workflow skills in order: `scan` → `spec` → `plan` → `tasks` → `implement` → `spec-review`.
+5. For each implementation task, load only the domain skill that matches your work.
+6. Keep `project-context.md` updated whenever stack, integrations, or standards change.

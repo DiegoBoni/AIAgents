@@ -1,3 +1,8 @@
+---
+name: devops
+description: Handle DevOps tasks — CI/CD pipelines, deployment scripts, infrastructure, environment config, and monitoring. Loads only [context.devops] from project-context.md.
+---
+
 # Skill: devops
 
 ## Metadata

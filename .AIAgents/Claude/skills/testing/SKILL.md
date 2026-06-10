@@ -1,3 +1,8 @@
+---
+name: testing
+description: Handle testing tasks — unit tests, integration tests, E2E tests, coverage checks, and CI gate validation. Loads only [context.testing] from project-context.md.
+---
+
 # Skill: testing
 
 ## Metadata

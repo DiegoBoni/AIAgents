@@ -1,3 +1,8 @@
+---
+name: frontend
+description: Handle frontend implementation tasks — components, pages, state management, routing, and API integration. Loads only [context.frontend] from project-context.md.
+---
+
 # Skill: frontend
 
 ## Metadata

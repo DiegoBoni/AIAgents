@@ -1,3 +1,8 @@
+---
+name: data
+description: Handle data layer tasks — database models, migrations, ORM queries, caching, and validation. Loads only [context.data] from project-context.md.
+---
+
 # Skill: data
 
 ## Metadata
