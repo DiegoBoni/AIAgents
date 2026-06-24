@@ -36,10 +36,10 @@ The `.AIAgents/` folder stays **only in this source repo** — it is not copied 
 | Claude | `.claude/commands/*.md` | `.claude/skills/*/SKILL.md` | `CLAUDE.md` |
 | Codex | `.codex/commands/*.md` | `.codex/skills/*/SKILL.md` | `AGENTS.md` |
 | Gemini | `.gemini/commands/*.md` | `.gemini/skills/*/SKILL.md` | `GEMINI.md` |
-| Copilot | `.copilot/commands/*.md` ¹ | `.copilot/skills/*/SKILL.md` ² | `.github/copilot-instructions.md` |
+| Copilot | `.copilot/commands/*.md` ¹ | `.github/skills/*/SKILL.md` ² | `.github/copilot-instructions.md` |
 
 ¹ Copilot has no native slash commands — these are prompt templates to paste in Copilot Chat.
-² Skills are not auto-loaded — open the file and paste into chat when needed.
+² Skills in `.github/skills/` are auto-discovered by Copilot Agent Mode (VS Code). In regular chat, paste manually.
 
 ## Source paths (this repo only)
 
@@ -48,7 +48,7 @@ The `.AIAgents/` folder stays **only in this source repo** — it is not copied 
 | Claude | `.AIAgents/Claude/commands/*.md` | `.AIAgents/Claude/skills/*/SKILL.md` |
 | Codex | `.AIAgents/Codex/commands/*.md` | `.AIAgents/Codex/skills/*/SKILL.md` |
 | Gemini | `.AIAgents/Gemini/commands/*.md` | `.AIAgents/Gemini/skills/*/SKILL.md` |
-| Copilot | `.AIAgents/Copilot/commands/*.md` | `.AIAgents/Copilot/skills/*/SKILL.md` |
+| Copilot | `.AIAgents/Copilot/commands/*.md` | `.AIAgents/Copilot/skills/*/SKILL.md` → installs to `.github/skills/` |
 
 ## How to make it work
 

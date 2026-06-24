@@ -1,3 +1,8 @@
+---
+name: frontend
+description: Analyze and review frontend component design, state management patterns, and UI-to-API contracts — focused on design correctness and risks before implementation.
+---
+
 # Skill: frontend
 
 ## Metadata

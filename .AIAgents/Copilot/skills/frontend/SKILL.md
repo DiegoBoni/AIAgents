@@ -1,3 +1,8 @@
+---
+name: frontend
+description: Implement frontend components, pages, state management, routing, and API integration aligned with the project design system. Model-agnostic — works with any Copilot model.
+---
+
 # Skill: frontend
 
 ## Metadata
@@ -19,10 +24,6 @@ Focused on producing working UI code aligned with the design system.
 - Connecting UI to backend APIs
 - Applying design system tokens and styling conventions
 - Fixing UI bugs or accessibility issues
-
-## How to load this skill (Copilot Chat)
-
-Open `.copilot/skills/frontend/SKILL.md` and paste its contents into the chat before describing your task.
 
 ## Context loading (minimal)
 

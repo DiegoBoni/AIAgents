@@ -1,3 +1,8 @@
+---
+name: data
+description: Implement data layer changes — migrations, model updates, query optimization, and caching — with safe, reversible steps and rollback paths.
+---
+
 # Skill: data
 
 ## Metadata

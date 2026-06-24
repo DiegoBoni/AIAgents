@@ -1,3 +1,8 @@
+---
+name: devops
+description: Analyze CI/CD pipeline design, deployment safety, and infrastructure risks — focused on environment impact and rollback strategies.
+---
+
 # Skill: devops
 
 ## Metadata

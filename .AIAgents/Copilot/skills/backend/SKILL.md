@@ -1,3 +1,8 @@
+---
+name: backend
+description: Implement backend endpoints, services, business logic, auth, and integrations following project conventions. Model-agnostic — works with any Copilot model.
+---
+
 # Skill: backend
 
 ## Metadata
@@ -19,10 +24,6 @@ Focused on producing working, testable code aligned with project conventions.
 - Integrating external APIs
 - Adding middleware, validation, or error handling
 - Fixing backend bugs
-
-## How to load this skill (Copilot Chat)
-
-Open `.copilot/skills/backend/SKILL.md` and paste its contents into the chat before describing your task.
 
 ## Context loading (minimal)
 

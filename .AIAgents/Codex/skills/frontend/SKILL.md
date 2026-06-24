@@ -1,3 +1,8 @@
+---
+name: frontend
+description: Implement frontend components, pages, state management, routing, and API integration aligned with the project design system.
+---
+
 # Skill: frontend
 
 ## Metadata

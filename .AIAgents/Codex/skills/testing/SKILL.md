@@ -1,3 +1,8 @@
+---
+name: testing
+description: Write and fix unit, integration, and E2E tests with deterministic, isolated test cases and clear coverage intent.
+---
+
 # Skill: testing
 
 ## Metadata

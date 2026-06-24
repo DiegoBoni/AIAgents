@@ -1,3 +1,8 @@
+---
+name: backend
+description: Implement backend endpoints, services, business logic, auth, and integrations with focused code generation and minimal context overhead.
+---
+
 # Skill: backend
 
 ## Metadata

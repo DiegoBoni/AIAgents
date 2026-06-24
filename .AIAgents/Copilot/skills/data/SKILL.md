@@ -1,3 +1,8 @@
+---
+name: data
+description: Implement data layer changes — migrations, model updates, query optimization, and caching — with safe, reversible steps and rollback paths. Model-agnostic — works with any Copilot model.
+---
+
 # Skill: data
 
 ## Metadata
@@ -19,10 +24,6 @@ Focused on safe, reversible changes with clear rollback paths.
 - Optimizing queries
 - Adding indexes, constraints, or defaults
 - Configuring caching
-
-## How to load this skill (Copilot Chat)
-
-Open `.copilot/skills/data/SKILL.md` and paste its contents into the chat before describing your task.
 
 ## Context loading (minimal)
 

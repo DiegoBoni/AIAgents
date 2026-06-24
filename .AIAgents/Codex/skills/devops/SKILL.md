@@ -1,3 +1,8 @@
+---
+name: devops
+description: Implement CI/CD pipelines, deployment scripts, and infrastructure changes with scoped, environment-safe steps.
+---
+
 # Skill: devops
 
 ## Metadata

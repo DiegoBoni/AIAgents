@@ -1,3 +1,8 @@
+---
+name: devops
+description: Implement CI/CD pipelines, deployment scripts, and infrastructure changes with scoped, environment-safe steps. Model-agnostic — works with any Copilot model.
+---
+
 # Skill: devops
 
 ## Metadata
@@ -19,10 +24,6 @@ Focused on safe, scoped changes with clear environment impact.
 - Managing environment variables and secrets references
 - Adjusting build or release configuration
 - Fixing broken pipeline steps
-
-## How to load this skill (Copilot Chat)
-
-Open `.copilot/skills/devops/SKILL.md` and paste its contents into the chat before describing your task.
 
 ## Context loading (minimal)
 

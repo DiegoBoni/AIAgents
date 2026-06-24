@@ -384,7 +384,7 @@ DOC
 
 install_copilot() {
   local dest_commands="$REPO_PATH/.copilot/commands"
-  local dest_skills="$REPO_PATH/.copilot/skills"
+  local dest_skills="$REPO_PATH/.github/skills"
 
   install_files "$MODULE_ROOT/Copilot/commands" "$dest_commands"
   install_skills "$MODULE_ROOT/Copilot/skills" "$dest_skills"
@@ -406,19 +406,21 @@ This project uses a shared multi-agent workflow. All agents read from the same s
 - \`specs/<type>/<slug>/tasks.md\` — atomic task list
 - \`.ai/current\` — path to the active spec directory
 
-## Domain skills (model-agnostic)
+## Domain skills (auto-discovered)
 
-Load only the skill matching your current task domain. Open the file and paste its contents into the chat.
+Skills are in \`.github/skills/\` — Copilot Agent Mode discovers and activates them automatically
+when your prompt is relevant to a domain. No manual loading needed.
 
-- Backend:  \`.copilot/skills/backend/SKILL.md\`
-- Frontend: \`.copilot/skills/frontend/SKILL.md\`
-- Data:     \`.copilot/skills/data/SKILL.md\`
-- Testing:  \`.copilot/skills/testing/SKILL.md\`
-- DevOps:   \`.copilot/skills/devops/SKILL.md\`
+- \`.github/skills/backend/SKILL.md\`
+- \`.github/skills/frontend/SKILL.md\`
+- \`.github/skills/data/SKILL.md\`
+- \`.github/skills/testing/SKILL.md\`
+- \`.github/skills/devops/SKILL.md\`
 
 ## Workflow commands (prompt templates)
 
-These are prompt templates — open the file and paste into Copilot Chat to execute the step.
+Copilot has no native slash commands. Use these prompt templates: open the file and paste into
+Copilot Chat to execute the workflow step.
 
 - \`.copilot/commands/scan.md\`      → profile repo and generate \`.ai/project-context.md\`
 - \`.copilot/commands/spec.md\`      → define feature or bug requirements
@@ -432,8 +434,8 @@ These are prompt templates — open the file and paste into Copilot Chat to exec
 ## Startup behavior (required)
 
 1. Run the \`scan\` prompt first to create or update \`.ai/project-context.md\`.
-2. Before any task, load only the domain skill matching your work.
-3. Each skill specifies exactly which section of \`project-context.md\` to read — load only that section.
+2. Domain skills in \`.github/skills/\` are activated automatically in Agent Mode.
+3. Each skill specifies exactly which section of \`project-context.md\` to read.
 4. If critical info is missing, mark \`NEEDS CLARIFICATION\` and continue with safe defaults.
 
 ## Multi-agent workflow
@@ -444,8 +446,8 @@ These are prompt templates — open the file and paste into Copilot Chat to exec
 
 ## Notes
 
-- Skills and commands are model-agnostic — they work with any model powering Copilot (GPT-4o, Claude, Gemini, etc.)
-- Do not auto-load all skills — load only the one matching the current domain task.
+- Skills are model-agnostic — they work with any model powering Copilot (GPT-4o, Claude, Gemini, etc.)
+- Skill auto-discovery requires Copilot Agent Mode (VS Code). In regular chat, paste the skill content manually.
 
 Bootstrap command:
 \`./.AIAgents/scripts/bootstrap-commands.sh --repo . --agent all --mode copy\`
@@ -473,4 +475,4 @@ fi
 ensure_project_context
 
 echo "Done. Installed in $REPO_PATH:"
-echo "  .claude/   .codex/   .gemini/   .copilot/   .github/copilot-instructions.md   .ai/project-context.md"
+echo "  .claude/   .codex/   .gemini/   .copilot/commands/   .github/skills/   .github/copilot-instructions.md   .ai/project-context.md"

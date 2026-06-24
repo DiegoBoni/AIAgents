@@ -1,3 +1,8 @@
+---
+name: testing
+description: Write and fix unit, integration, and E2E tests with deterministic, isolated test cases and clear coverage intent. Model-agnostic — works with any Copilot model.
+---
+
 # Skill: testing
 
 ## Metadata
@@ -19,10 +24,6 @@ Focused on deterministic, isolated test cases with clear coverage intent.
 - Extending E2E scenarios
 - Fixing broken or flaky tests
 - Identifying coverage gaps
-
-## How to load this skill (Copilot Chat)
-
-Open `.copilot/skills/testing/SKILL.md` and paste its contents into the chat before describing your task.
 
 ## Context loading (minimal)
 
