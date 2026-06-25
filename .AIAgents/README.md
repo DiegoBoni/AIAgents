@@ -1,5 +1,7 @@
 # AI Module (.AIAgents)
 
+[🇪🇸 Leer en español](README.es.md)
+
 Reusable Markdown module to import into any software project.
 Provides workflow skills for the planning pipeline and domain-scoped skills to minimize token usage per task.
 Supports four AI agents: Claude, Codex, Gemini, and GitHub Copilot.
