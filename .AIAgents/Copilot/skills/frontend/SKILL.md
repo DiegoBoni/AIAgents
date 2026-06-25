@@ -1,20 +1,20 @@
 ---
 name: frontend
-description: Implement frontend components, pages, state management, routing, and API integration aligned with the project design system.
+description: Implement frontend components, pages, state management, routing, and API integration aligned with the project design system. Model-agnostic — works with any Copilot model.
 ---
 
 # Skill: frontend
 
 ## Metadata
 
-- Agent: Codex
+- Agent: Copilot (model-agnostic)
 - Version: 0.1.0
 - Domain: frontend
 - Context section: `[context.frontend]` in `project-context.md`
 
 ## Purpose
 
-Implement frontend code changes: components, pages, state, routing, and API integration.
+Implement frontend code changes: components, pages, state management, routing, and API integration.
 Focused on producing working UI code aligned with the design system.
 
 ## When to use
@@ -42,7 +42,7 @@ Do NOT load backend service logic, migrations, or devops sections.
 
 1. Read `[context.frontend]` from `.ai/project-context.md`.
 2. Read the target file(s).
-3. Implement the change using the established component patterns and design system.
+3. Implement the change using established component patterns and design system.
 4. Verify API calls match the backend contract — flag mismatches, do not fix backend here.
 5. Run lint if available.
 6. Return: files changed, behavioral impact, downstream flags.

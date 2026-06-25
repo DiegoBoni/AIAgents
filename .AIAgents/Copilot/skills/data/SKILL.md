@@ -1,13 +1,13 @@
 ---
 name: data
-description: Implement data layer changes — migrations, model updates, query optimization, and caching — with safe, reversible steps and rollback paths.
+description: Implement data layer changes — migrations, model updates, query optimization, and caching — with safe, reversible steps and rollback paths. Model-agnostic — works with any Copilot model.
 ---
 
 # Skill: data
 
 ## Metadata
 
-- Agent: Codex
+- Agent: Copilot (model-agnostic)
 - Version: 0.1.0
 - Domain: data
 - Context section: `[context.data]` in `project-context.md`

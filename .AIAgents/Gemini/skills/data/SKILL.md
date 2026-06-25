@@ -1,3 +1,8 @@
+---
+name: data
+description: Analyze data model design, migration safety, and query correctness — focused on integrity risks and rollback strategies before implementation.
+---
+
 # Skill: data
 
 ## Metadata

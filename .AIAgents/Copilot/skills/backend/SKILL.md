@@ -1,13 +1,13 @@
 ---
 name: backend
-description: Implement backend endpoints, services, business logic, auth, and integrations with focused code generation and minimal context overhead.
+description: Implement backend endpoints, services, business logic, auth, and integrations following project conventions. Model-agnostic — works with any Copilot model.
 ---
 
 # Skill: backend
 
 ## Metadata
 
-- Agent: Codex
+- Agent: Copilot (model-agnostic)
 - Version: 0.1.0
 - Domain: backend
 - Context section: `[context.backend]` in `project-context.md`
@@ -15,7 +15,7 @@ description: Implement backend endpoints, services, business logic, auth, and in
 ## Purpose
 
 Implement backend code changes: endpoints, services, business logic, auth, and integrations.
-Focused on producing working, testable code with minimal context overhead.
+Focused on producing working, testable code aligned with project conventions.
 
 ## When to use
 

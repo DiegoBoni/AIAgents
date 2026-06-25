@@ -1,3 +1,8 @@
+---
+name: testing
+description: Analyze test coverage gaps, review test strategy, and identify edge cases and behavioral drift between spec and implementation.
+---
+
 # Skill: testing
 
 ## Metadata

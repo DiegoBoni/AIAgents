@@ -1,13 +1,13 @@
 ---
 name: devops
-description: Implement CI/CD pipelines, deployment scripts, and infrastructure changes with scoped, environment-safe steps.
+description: Implement CI/CD pipelines, deployment scripts, and infrastructure changes with scoped, environment-safe steps. Model-agnostic — works with any Copilot model.
 ---
 
 # Skill: devops
 
 ## Metadata
 
-- Agent: Codex
+- Agent: Copilot (model-agnostic)
 - Version: 0.1.0
 - Domain: devops
 - Context section: `[context.devops]` in `project-context.md`

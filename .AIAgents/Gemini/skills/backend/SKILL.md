@@ -1,3 +1,8 @@
+---
+name: backend
+description: Analyze and review backend API contracts, service architecture, auth flows, and integration patterns — focused on correctness, tradeoffs, and risks before implementation.
+---
+
 # Skill: backend
 
 ## Metadata

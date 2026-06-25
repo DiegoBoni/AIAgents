@@ -1,13 +1,13 @@
 ---
 name: testing
-description: Write and fix unit, integration, and E2E tests with deterministic, isolated test cases and clear coverage intent.
+description: Write and fix unit, integration, and E2E tests with deterministic, isolated test cases and clear coverage intent. Model-agnostic — works with any Copilot model.
 ---
 
 # Skill: testing
 
 ## Metadata
 
-- Agent: Codex
+- Agent: Copilot (model-agnostic)
 - Version: 0.1.0
 - Domain: testing
 - Context section: `[context.testing]` in `project-context.md`
